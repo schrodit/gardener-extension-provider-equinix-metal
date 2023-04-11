@@ -1,5 +1,5 @@
 image:
-  repository: ghcr.io/schrodit/gardener-extension-provider-equinix-metal
+  repository: ghcr.io/schrodit/extensions/provider-equinix-metal
   tag: latest
   pullPolicy: IfNotPresent
 
