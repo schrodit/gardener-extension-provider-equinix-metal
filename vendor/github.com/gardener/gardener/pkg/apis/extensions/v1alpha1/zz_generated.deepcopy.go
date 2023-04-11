@@ -1304,6 +1304,11 @@ func (in *NetworkList) DeepCopyObject() runtime.Object {
 func (in *NetworkSpec) DeepCopyInto(out *NetworkSpec) {
 	*out = *in
 	in.DefaultSpec.DeepCopyInto(&out.DefaultSpec)
+	if in.IPFamilies != nil {
+		in, out := &in.IPFamilies, &out.IPFamilies
+		*out = make([]IPFamily, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 
@@ -1692,6 +1697,11 @@ func (in *WorkerPool) DeepCopyInto(out *WorkerPool) {
 		in, out := &in.NodeTemplate, &out.NodeTemplate
 		*out = new(NodeTemplate)
 		(*in).DeepCopyInto(*out)
+	}
+	if in.Architecture != nil {
+		in, out := &in.Architecture, &out.Architecture
+		*out = new(string)
+		**out = **in
 	}
 	return
 }

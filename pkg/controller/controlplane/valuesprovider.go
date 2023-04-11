@@ -18,13 +18,11 @@ import (
 	"context"
 	"path/filepath"
 
-	api "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/apis/equinixmetal"
-	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/equinixmetal"
-
 	extensionscontroller "github.com/gardener/gardener/extensions/pkg/controller"
 	"github.com/gardener/gardener/extensions/pkg/controller/common"
 	"github.com/gardener/gardener/extensions/pkg/controller/controlplane/genericactuator"
 	v1beta1constants "github.com/gardener/gardener/pkg/apis/core/v1beta1/constants"
+	gardencorev1beta1helper "github.com/gardener/gardener/pkg/apis/core/v1beta1/helper"
 	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
 	"github.com/gardener/gardener/pkg/utils/chart"
 	gutil "github.com/gardener/gardener/pkg/utils/gardener"
@@ -35,6 +33,9 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
+
+	api "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/apis/equinixmetal"
+	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/equinixmetal"
 )
 
 func shootAccessSecretsFunc(namespace string) []*gutil.ShootAccessSecret {
@@ -84,10 +85,8 @@ var storageClassChart = &chart.Chart{
 }
 
 // NewValuesProvider creates a new ValuesProvider for the generic actuator.
-func NewValuesProvider(logger logr.Logger) genericactuator.ValuesProvider {
-	return &valuesProvider{
-		logger: logger.WithName("equinix-metal-values-provider"),
-	}
+func NewValuesProvider() genericactuator.ValuesProvider {
+	return &valuesProvider{}
 }
 
 // valuesProvider is a ValuesProvider that provides Equinix Metal-specific values for the 2 charts applied by the generic actuator.
@@ -117,11 +116,11 @@ func (vp *valuesProvider) GetControlPlaneChartValues(
 func (vp *valuesProvider) GetControlPlaneShootChartValues(
 	_ context.Context,
 	_ *extensionsv1alpha1.ControlPlane,
-	_ *extensionscontroller.Cluster,
+	cluster *extensionscontroller.Cluster,
 	_ secretsmanager.Reader,
 	_ map[string]string,
 ) (map[string]interface{}, error) {
-	return nil, nil
+	return getControlPlaneShootChartValues(cluster)
 }
 
 // getCredentials determines the credentials from the secret referenced in the ControlPlane resource.
@@ -152,10 +151,9 @@ func getControlPlaneChartValues(
 ) {
 	values := map[string]interface{}{
 		"cloud-provider-equinix-metal": map[string]interface{}{
-			"replicas":          extensionscontroller.GetControlPlaneReplicas(cluster, scaledDown, 1),
-			"clusterName":       cp.Namespace,
-			"kubernetesVersion": cluster.Shoot.Spec.Kubernetes.Version,
-			"podNetwork":        extensionscontroller.GetPodNetwork(cluster),
+			"replicas":    extensionscontroller.GetControlPlaneReplicas(cluster, scaledDown, 1),
+			"clusterName": cp.Namespace,
+			"podNetwork":  extensionscontroller.GetPodNetwork(cluster),
 			"podAnnotations": map[string]interface{}{
 				"checksum/secret-cloudprovider": checksums[v1beta1constants.SecretNameCloudProvider],
 			},
@@ -165,6 +163,17 @@ func getControlPlaneChartValues(
 	}
 
 	return values, nil
+}
+
+// getControlPlaneShootChartValues collects and returns the control plane shoot chart values.
+func getControlPlaneShootChartValues(
+	cluster *extensionscontroller.Cluster,
+) (map[string]interface{}, error) {
+	return map[string]interface{}{
+		"metallb": map[string]interface{}{
+			"pspDisabled": gardencorev1beta1helper.IsPSPDisabled(cluster.Shoot),
+		},
+	}, nil
 }
 
 func (vp *valuesProvider) decodeControlPlaneConfig(cp *extensionsv1alpha1.ControlPlane) (*api.ControlPlaneConfig, error) {

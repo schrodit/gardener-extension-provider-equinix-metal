@@ -7,6 +7,7 @@ metadata:
   labels:
     app: metallb
 ---
+{{- if not .Values.pspDisabled }}
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
@@ -49,9 +50,14 @@ spec:
   - secret
   - emptyDir
 ---
+{{- end }}
+{{- if not .Values.pspDisabled }}
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
+  annotations:
+    seccomp.security.alpha.kubernetes.io/defaultProfileName: 'runtime/default'
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'runtime/default'
   labels:
     app: metallb
   name: speaker
@@ -88,6 +94,7 @@ spec:
   - secret
   - emptyDir
 ---
+{{- end }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -133,6 +140,7 @@ rules:
   verbs:
   - create
   - patch
+{{- if not .Values.pspDisabled }}
 - apiGroups:
   - policy
   resourceNames:
@@ -141,6 +149,7 @@ rules:
   - podsecuritypolicies
   verbs:
   - use
+{{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -166,6 +175,7 @@ rules:
   verbs:
   - create
   - patch
+{{- if not .Values.pspDisabled }}
 - apiGroups:
   - policy
   resourceNames:
@@ -174,6 +184,7 @@ rules:
   - podsecuritypolicies
   verbs:
   - use
+{{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -402,6 +413,11 @@ spec:
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
+        supplementalGroups:
+        - 1
+        - 65535
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: controller
       terminationGracePeriodSeconds: 0
 ---

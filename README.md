@@ -23,14 +23,13 @@ This extension controller supports the following Kubernetes versions:
 
 | Version         | Support     | Conformance test results |
 | --------------- | ----------- | ------------------------ |
+| Kubernetes 1.26 | untested    | N/A                      |
+| Kubernetes 1.25 | untested    | N/A                      |
 | Kubernetes 1.24 | untested    | N/A                      |
 | Kubernetes 1.23 | untested    | N/A                      |
 | Kubernetes 1.22 | untested    | N/A                      |
 | Kubernetes 1.21 | untested    | N/A                      |
 | Kubernetes 1.20 | untested    | N/A                      |
-| Kubernetes 1.19 | untested    | N/A                      |
-| Kubernetes 1.18 | untested    | N/A                      |
-| Kubernetes 1.17 | untested    | N/A                      |
 
 Please take a look [here](https://github.com/gardener/gardener/blob/master/docs/usage/supported_k8s_versions.md) to see which versions are supported by Gardener in general.
 
@@ -54,7 +53,7 @@ Please find further resources about out project here:
 * ["Gardener, the Kubernetes Botanist" blog on kubernetes.io](https://kubernetes.io/blog/2018/05/17/gardener/)
 * ["Gardener Project Update" blog on kubernetes.io](https://kubernetes.io/blog/2019/12/02/gardener-project-update/)
 * [GEP-1 (Gardener Enhancement Proposal) on extensibility](https://github.com/gardener/gardener/blob/master/docs/proposals/01-extensibility.md)
-* [GEP-4 (New `core.gardener.cloud/v1alpha1` API)](https://github.com/gardener/gardener/blob/master/docs/proposals/04-new-core-gardener-cloud-apis.md)
+* [GEP-4 (New `core.gardener.cloud/v1beta1` API)](https://github.com/gardener/gardener/blob/master/docs/proposals/04-new-core-gardener-cloud-apis.md)
 * [Extensibility API documentation](https://github.com/gardener/gardener/tree/master/docs/extensions)
 * [Gardener Extensions Golang library](https://godoc.org/github.com/gardener/gardener/extensions/pkg)
 * [Gardener API Reference](https://gardener.cloud/api-reference/)

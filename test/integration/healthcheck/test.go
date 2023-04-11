@@ -42,18 +42,18 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/equinixmetal"
-
 	genericcontrolplaneactuator "github.com/gardener/gardener/extensions/pkg/controller/controlplane/genericactuator"
 	genericworkeractuator "github.com/gardener/gardener/extensions/pkg/controller/worker/genericactuator"
-	healthcheckoperation "github.com/gardener/gardener/extensions/test/testmachinery/healthcheck"
 	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
 	"github.com/gardener/gardener/pkg/client/kubernetes"
 	"github.com/gardener/gardener/test/framework"
+	healthcheckoperation "github.com/gardener/gardener/test/testmachinery/extensions/healthcheck"
 	machinev1alpha1 "github.com/gardener/machine-controller-manager/pkg/apis/machine/v1alpha1"
 	"github.com/onsi/ginkgo/v2"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+
+	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/equinixmetal"
 )
 
 const (

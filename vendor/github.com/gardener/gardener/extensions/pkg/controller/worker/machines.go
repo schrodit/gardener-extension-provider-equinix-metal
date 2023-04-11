@@ -20,16 +20,17 @@ import (
 	"regexp"
 	"strconv"
 
-	extensionscontroller "github.com/gardener/gardener/extensions/pkg/controller"
-	"github.com/gardener/gardener/extensions/pkg/util"
-	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
-	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
-	"github.com/gardener/gardener/pkg/utils"
-
 	machinev1alpha1 "github.com/gardener/machine-controller-manager/pkg/apis/machine/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+
+	extensionscontroller "github.com/gardener/gardener/extensions/pkg/controller"
+	"github.com/gardener/gardener/extensions/pkg/util"
+	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
+	"github.com/gardener/gardener/pkg/apis/core/v1beta1/helper"
+	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
+	"github.com/gardener/gardener/pkg/utils"
 )
 
 var diskSizeRegexp *regexp.Regexp
@@ -163,6 +164,11 @@ func WorkerPoolHash(pool extensionsv1alpha1.WorkerPool, cluster *extensionscontr
 		if status.Credentials.Rotation.ServiceAccountKey != nil && status.Credentials.Rotation.ServiceAccountKey.LastInitiationTime != nil {
 			data = append(data, status.Credentials.Rotation.ServiceAccountKey.LastInitiationTime.Time.String())
 		}
+	}
+
+	// Do not consider the shoot annotations here to prevent unintended node roll outs.
+	if helper.IsNodeLocalDNSEnabled(cluster.Shoot.Spec.SystemComponents, map[string]string{}) {
+		data = append(data, "node-local-dns")
 	}
 
 	var result string

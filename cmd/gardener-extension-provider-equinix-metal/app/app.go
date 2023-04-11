@@ -19,6 +19,20 @@ import (
 	"fmt"
 	"os"
 
+	druidv1alpha1 "github.com/gardener/etcd-druid/api/v1alpha1"
+	"github.com/gardener/gardener/extensions/pkg/controller"
+	controllercmd "github.com/gardener/gardener/extensions/pkg/controller/cmd"
+	"github.com/gardener/gardener/extensions/pkg/controller/controlplane/genericactuator"
+	"github.com/gardener/gardener/extensions/pkg/controller/heartbeat"
+	heartbeatcmd "github.com/gardener/gardener/extensions/pkg/controller/heartbeat/cmd"
+	"github.com/gardener/gardener/extensions/pkg/controller/worker"
+	"github.com/gardener/gardener/extensions/pkg/util"
+	webhookcmd "github.com/gardener/gardener/extensions/pkg/webhook/cmd"
+	machinev1alpha1 "github.com/gardener/machine-controller-manager/pkg/apis/machine/v1alpha1"
+	"github.com/spf13/cobra"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
+
 	eqxminstall "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/apis/equinixmetal/install"
 	eqxmcmd "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/cmd"
 	eqxmcontrolplane "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/controller/controlplane"
@@ -27,18 +41,6 @@ import (
 	eqxmworker "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/controller/worker"
 	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/equinixmetal"
 	eqxmcontrolplaneexposure "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/webhook/controlplaneexposure"
-
-	druidv1alpha1 "github.com/gardener/etcd-druid/api/v1alpha1"
-	"github.com/gardener/gardener/extensions/pkg/controller"
-	controllercmd "github.com/gardener/gardener/extensions/pkg/controller/cmd"
-	"github.com/gardener/gardener/extensions/pkg/controller/controlplane/genericactuator"
-	"github.com/gardener/gardener/extensions/pkg/controller/worker"
-	"github.com/gardener/gardener/extensions/pkg/util"
-	webhookcmd "github.com/gardener/gardener/extensions/pkg/webhook/cmd"
-	machinev1alpha1 "github.com/gardener/machine-controller-manager/pkg/apis/machine/v1alpha1"
-	"github.com/spf13/cobra"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
 // NewControllerManagerCommand creates a new command for running an Equinix Metal provider controller.
@@ -80,6 +82,13 @@ func NewControllerManagerCommand(ctx context.Context) *cobra.Command {
 			MaxConcurrentReconciles: 1,
 		}
 
+		// options for the heartbeat controller
+		heartbeatCtrlOpts = &heartbeatcmd.Options{
+			ExtensionName:        equinixmetal.Name,
+			RenewIntervalSeconds: 30,
+			Namespace:            os.Getenv("LEADER_ELECTION_NAMESPACE"),
+		}
+
 		// options for the webhook server
 		webhookServerOptions = &webhookcmd.ServerOptions{
 			Namespace: os.Getenv("WEBHOOK_CONFIG_NAMESPACE"),
@@ -103,6 +112,7 @@ func NewControllerManagerCommand(ctx context.Context) *cobra.Command {
 			controllercmd.PrefixOption("infrastructure-", infraCtrlOpts),
 			controllercmd.PrefixOption("worker-", &workerCtrlOptsUnprefixed),
 			controllercmd.PrefixOption("healthcheck-", healthCheckCtrlOpts),
+			controllercmd.PrefixOption("heartbeat-", heartbeatCtrlOpts),
 			controllerSwitches,
 			configFileOpts,
 			reconcileOpts,
@@ -116,6 +126,10 @@ func NewControllerManagerCommand(ctx context.Context) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := aggOption.Complete(); err != nil {
 				return fmt.Errorf("error completing options: %w", err)
+			}
+
+			if err := heartbeatCtrlOpts.Validate(); err != nil {
+				return err
 			}
 
 			util.ApplyClientConnectionConfigurationToRESTConfig(configFileOpts.Completed().Config.ClientConnection, restOpts.Completed().Config)
@@ -152,6 +166,7 @@ func NewControllerManagerCommand(ctx context.Context) *cobra.Command {
 			configFileOpts.Completed().ApplyHealthCheckConfig(&healthcheck.DefaultAddOptions.HealthCheckConfig)
 			controlPlaneCtrlOpts.Completed().Apply(&eqxmcontrolplane.DefaultAddOptions.Controller)
 			healthCheckCtrlOpts.Completed().Apply(&healthcheck.DefaultAddOptions.Controller)
+			heartbeatCtrlOpts.Completed().Apply(&heartbeat.DefaultAddOptions)
 			infraCtrlOpts.Completed().Apply(&eqxminfrastructure.DefaultAddOptions.Controller)
 			reconcileOpts.Completed().Apply(&eqxminfrastructure.DefaultAddOptions.IgnoreOperationAnnotation)
 			reconcileOpts.Completed().Apply(&eqxmcontrolplane.DefaultAddOptions.IgnoreOperationAnnotation)
@@ -163,6 +178,7 @@ func NewControllerManagerCommand(ctx context.Context) *cobra.Command {
 				return fmt.Errorf("could not add webhooks to manager: %w", err)
 			}
 			eqxmcontrolplane.DefaultAddOptions.ShootWebhookConfig = atomicShootWebhookConfig
+			eqxmcontrolplane.DefaultAddOptions.WebhookServerNamespace = webhookOptions.Server.Namespace
 
 			if err := controllerSwitches.Completed().AddToManager(mgr); err != nil {
 				return fmt.Errorf("could not add controllers to manager: %w", err)

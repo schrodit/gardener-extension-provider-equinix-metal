@@ -22,9 +22,10 @@ import (
 	"strings"
 	"time"
 
+	"k8s.io/utils/pointer"
+
 	"github.com/gardener/gardener/extensions/pkg/webhook"
-	"github.com/gardener/gardener/pkg/utils"
-	secretutils "github.com/gardener/gardener/pkg/utils/secrets"
+	secretsutils "github.com/gardener/gardener/pkg/utils/secrets"
 )
 
 // GenerateUnmanagedCertificates generates a one-off CA and server cert for a webhook server. The server certificate and
@@ -32,7 +33,7 @@ import (
 func GenerateUnmanagedCertificates(providerName, certDir, mode, url string) ([]byte, error) {
 	caConfig := getWebhookCAConfig(providerName)
 	// we want to use a long validity here, because we don't auto-renew certificates
-	caConfig.Validity = utils.DurationPtr(10 * 365 * 24 * time.Hour) // 10y
+	caConfig.Validity = pointer.Duration(10 * 365 * 24 * time.Hour) // 10y
 
 	caCert, err := caConfig.GenerateCertificate()
 	if err != nil {
@@ -52,16 +53,16 @@ func GenerateUnmanagedCertificates(providerName, certDir, mode, url string) ([]b
 
 var caCertificateValidity = 30 * 24 * time.Hour // 30d
 
-func getWebhookCAConfig(name string) *secretutils.CertificateSecretConfig {
-	return &secretutils.CertificateSecretConfig{
+func getWebhookCAConfig(name string) *secretsutils.CertificateSecretConfig {
+	return &secretsutils.CertificateSecretConfig{
 		Name:       name,
 		CommonName: name,
-		CertType:   secretutils.CACert,
+		CertType:   secretsutils.CACert,
 		Validity:   &caCertificateValidity,
 	}
 }
 
-func getWebhookServerCertConfig(name, namespace, providerName, mode, url string) *secretutils.CertificateSecretConfig {
+func getWebhookServerCertConfig(name, namespace, componentName, mode, url string) *secretsutils.CertificateSecretConfig {
 	var (
 		dnsNames    []string
 		ipAddresses []net.IP
@@ -76,38 +77,36 @@ func getWebhookServerCertConfig(name, namespace, providerName, mode, url string)
 
 	switch mode {
 	case webhook.ModeURL:
-		if addr := net.ParseIP(url); addr != nil {
+		if addr := net.ParseIP(serverName); addr != nil {
 			ipAddresses = []net.IP{addr}
 		} else {
 			dnsNames = []string{serverName}
 		}
 
 	case webhook.ModeService:
-		dnsNames = []string{
-			fmt.Sprintf("gardener-extension-%s", providerName),
-		}
+		dnsNames = []string{webhook.PrefixedName(componentName)}
 		if namespace != "" {
 			dnsNames = append(dnsNames,
-				fmt.Sprintf("gardener-extension-%s.%s", providerName, namespace),
-				fmt.Sprintf("gardener-extension-%s.%s.svc", providerName, namespace),
+				fmt.Sprintf("%s.%s", webhook.PrefixedName(componentName), namespace),
+				fmt.Sprintf("%s.%s.svc", webhook.PrefixedName(componentName), namespace),
 			)
 		}
 	}
 
-	return &secretutils.CertificateSecretConfig{
+	return &secretsutils.CertificateSecretConfig{
 		Name:                        name,
-		CommonName:                  providerName,
+		CommonName:                  componentName,
 		DNSNames:                    dnsNames,
 		IPAddresses:                 ipAddresses,
-		CertType:                    secretutils.ServerCert,
+		CertType:                    secretsutils.ServerCert,
 		SkipPublishingCACertificate: true,
 	}
 }
 
 func writeCertificatesToDisk(certDir string, serverCert, serverKey []byte) error {
 	var (
-		serverKeyPath  = filepath.Join(certDir, secretutils.DataKeyPrivateKey)
-		serverCertPath = filepath.Join(certDir, secretutils.DataKeyCertificate)
+		serverKeyPath  = filepath.Join(certDir, secretsutils.DataKeyPrivateKey)
+		serverCertPath = filepath.Join(certDir, secretsutils.DataKeyCertificate)
 	)
 
 	if err := os.MkdirAll(certDir, 0755); err != nil {

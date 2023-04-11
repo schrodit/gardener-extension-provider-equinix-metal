@@ -18,8 +18,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/apis/config"
-
 	druidv1alpha1 "github.com/gardener/etcd-druid/api/v1alpha1"
 	extensionswebhook "github.com/gardener/gardener/extensions/pkg/webhook"
 	gcontext "github.com/gardener/gardener/extensions/pkg/webhook/context"
@@ -38,6 +36,8 @@ import (
 	"k8s.io/utils/pointer"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/runtime/inject"
+
+	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/apis/config"
 )
 
 const (
@@ -285,7 +285,7 @@ func checkETCDEvents(etcd *druidv1alpha1.Etcd) {
 }
 
 func clientGet(result runtime.Object) interface{} {
-	return func(ctx context.Context, key client.ObjectKey, obj runtime.Object) error {
+	return func(ctx context.Context, key client.ObjectKey, obj runtime.Object, _ ...client.GetOption) error {
 		switch obj.(type) {
 		case *corev1.Service:
 			*obj.(*corev1.Service) = *result.(*corev1.Service)

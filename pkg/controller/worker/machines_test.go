@@ -22,11 +22,6 @@ import (
 	"strings"
 	"time"
 
-	api "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/apis/equinixmetal"
-	apiv1alpha1 "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/apis/equinixmetal/v1alpha1"
-	. "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/controller/worker"
-	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/equinixmetal"
-
 	extensionscontroller "github.com/gardener/gardener/extensions/pkg/controller"
 	"github.com/gardener/gardener/extensions/pkg/controller/common"
 	"github.com/gardener/gardener/extensions/pkg/controller/worker"
@@ -47,6 +42,11 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	api "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/apis/equinixmetal"
+	apiv1alpha1 "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/apis/equinixmetal/v1alpha1"
+	. "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/controller/worker"
+	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/equinixmetal"
 )
 
 var (
@@ -502,7 +502,7 @@ func encode(obj runtime.Object) []byte {
 func expectGetSecretCallToWork(c *mockclient.MockClient, apiToken, projectID string) {
 	c.EXPECT().
 		Get(ctx, gomock.Any(), gomock.AssignableToTypeOf(&corev1.Secret{})).
-		DoAndReturn(func(_ context.Context, _ client.ObjectKey, secret *corev1.Secret) error {
+		DoAndReturn(func(_ context.Context, _ client.ObjectKey, secret *corev1.Secret, _ ...client.GetOption) error {
 			secret.Data = map[string][]byte{
 				equinixmetal.APIToken:  []byte(apiToken),
 				equinixmetal.ProjectID: []byte(projectID),

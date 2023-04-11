@@ -26,20 +26,18 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	workerhelper "github.com/gardener/gardener/extensions/pkg/controller/worker/helper"
+	extensionsworkerhelper "github.com/gardener/gardener/extensions/pkg/controller/worker/helper"
 	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
 )
 
 type genericStateActuator struct {
-	logger logr.Logger
-
 	client client.Client
 }
 
 // NewStateActuator creates a new Actuator that reconciles Worker's State subresource
 // It provides a default implementation that allows easier integration of providers.
-func NewStateActuator(logger logr.Logger) StateActuator {
-	return &genericStateActuator{logger: logger.WithName("worker-state-actuator")}
+func NewStateActuator() StateActuator {
+	return &genericStateActuator{}
 }
 
 func (a *genericStateActuator) InjectClient(client client.Client) error {
@@ -48,7 +46,7 @@ func (a *genericStateActuator) InjectClient(client client.Client) error {
 }
 
 // Reconcile update the Worker state with the latest.
-func (a *genericStateActuator) Reconcile(ctx context.Context, worker *extensionsv1alpha1.Worker) error {
+func (a *genericStateActuator) Reconcile(ctx context.Context, _ logr.Logger, worker *extensionsv1alpha1.Worker) error {
 	copyOfWorker := worker.DeepCopy()
 	if err := a.updateWorkerState(ctx, copyOfWorker); err != nil {
 		return fmt.Errorf("failed to update the state in worker status: %w", err)
@@ -128,7 +126,7 @@ func (a *genericStateActuator) getExistingMachineSetsMap(ctx context.Context, na
 	// When we read from the cache we get unsorted results, hence, we sort to prevent unnecessary state updates from happening.
 	sort.Slice(existingMachineSets.Items, func(i, j int) bool { return existingMachineSets.Items[i].Name < existingMachineSets.Items[j].Name })
 
-	return workerhelper.BuildOwnerToMachineSetsMap(existingMachineSets.Items), nil
+	return extensionsworkerhelper.BuildOwnerToMachineSetsMap(existingMachineSets.Items), nil
 }
 
 // getExistingMachinesMap returns a map of the existing Machines as values and the name of their owner
@@ -141,13 +139,13 @@ func (a *genericStateActuator) getExistingMachinesMap(ctx context.Context, names
 		return nil, err
 	}
 
-	// We temporarily filter out machines without provider ID or node status (VMs which got created but not yet joined the cluster)
+	// We temporarily filter out machines without provider ID or node label (VMs which got created but not yet joined the cluster)
 	// to prevent unnecessarily persisting them in the Worker state.
 	// TODO: Remove this again once machine-controller-manager supports backing off creation/deletion of failed machines, see
 	// https://github.com/gardener/machine-controller-manager/issues/483.
 	var filteredMachines []machinev1alpha1.Machine
 	for _, machine := range existingMachines.Items {
-		if machine.Spec.ProviderID != "" || machine.Status.Node != "" {
+		if _, ok := machine.Labels["node"]; ok || machine.Spec.ProviderID != "" {
 			filteredMachines = append(filteredMachines, machine)
 		}
 	}
@@ -155,7 +153,7 @@ func (a *genericStateActuator) getExistingMachinesMap(ctx context.Context, names
 	// When we read from the cache we get unsorted results, hence, we sort to prevent unnecessary state updates from happening.
 	sort.Slice(filteredMachines, func(i, j int) bool { return filteredMachines[i].Name < filteredMachines[j].Name })
 
-	return workerhelper.BuildOwnerToMachinesMap(filteredMachines), nil
+	return extensionsworkerhelper.BuildOwnerToMachinesMap(filteredMachines), nil
 }
 
 func addMachineSetToMachineDeploymentState(machineSets []machinev1alpha1.MachineSet, machineDeploymentState *MachineDeploymentState) {
@@ -192,9 +190,7 @@ func addMachineToMachineDeploymentState(machine *machinev1alpha1.Machine, machin
 		Labels:      machine.Labels,
 	}
 	machine.OwnerReferences = nil
-	machine.Status = machinev1alpha1.MachineStatus{
-		Node: machine.Status.Node,
-	}
+	machine.Status = machinev1alpha1.MachineStatus{}
 
 	machineDeploymentState.Machines = append(machineDeploymentState.Machines, *machine)
 }

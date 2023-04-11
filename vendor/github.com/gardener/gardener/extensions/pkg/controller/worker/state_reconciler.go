@@ -18,22 +18,19 @@ import (
 	"context"
 	"fmt"
 
-	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
-	gardencorev1beta1helper "github.com/gardener/gardener/pkg/apis/core/v1beta1/helper"
-	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
-	errorutils "github.com/gardener/gardener/pkg/controllerutils/reconciler"
-
-	"github.com/go-logr/logr"
-	"k8s.io/apimachinery/pkg/api/errors"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
-	"sigs.k8s.io/controller-runtime/pkg/manager"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"sigs.k8s.io/controller-runtime/pkg/runtime/inject"
+
+	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
+	v1beta1helper "github.com/gardener/gardener/pkg/apis/core/v1beta1/helper"
+	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
+	reconcilerutils "github.com/gardener/gardener/pkg/controllerutils/reconciler"
 )
 
 type stateReconciler struct {
-	logger   logr.Logger
 	actuator StateActuator
 
 	client client.Client
@@ -41,9 +38,8 @@ type stateReconciler struct {
 
 // NewStateReconciler creates a new reconcile.Reconciler that reconciles
 // Worker's State resources of Gardener's `extensions.gardener.cloud` API group.
-func NewStateReconciler(mgr manager.Manager, actuator StateActuator) reconcile.Reconciler {
+func NewStateReconciler(actuator StateActuator) reconcile.Reconciler {
 	return &stateReconciler{
-		logger:   log.Log.WithName(StateUpdatingControllerName),
 		actuator: actuator,
 	}
 }
@@ -58,15 +54,16 @@ func (r *stateReconciler) InjectClient(client client.Client) error {
 }
 
 func (r *stateReconciler) Reconcile(ctx context.Context, request reconcile.Request) (reconcile.Result, error) {
+	log := logf.FromContext(ctx)
+
 	worker := &extensionsv1alpha1.Worker{}
 	if err := r.client.Get(ctx, request.NamespacedName, worker); err != nil {
-		if errors.IsNotFound(err) {
+		if apierrors.IsNotFound(err) {
+			log.V(1).Info("Object is gone, stop reconciling")
 			return reconcile.Result{}, nil
 		}
-		return reconcile.Result{}, err
+		return reconcile.Result{}, fmt.Errorf("error retrieving object from store: %w", err)
 	}
-
-	logger := r.logger.WithValues("worker", client.ObjectKeyFromObject(worker))
 
 	// Deletion flow
 	if worker.DeletionTimestamp != nil {
@@ -75,19 +72,17 @@ func (r *stateReconciler) Reconcile(ctx context.Context, request reconcile.Reque
 	}
 
 	// Reconcile flow
-	operationType := gardencorev1beta1helper.ComputeOperationType(worker.ObjectMeta, worker.Status.LastOperation)
+	operationType := v1beta1helper.ComputeOperationType(worker.ObjectMeta, worker.Status.LastOperation)
 	if operationType != gardencorev1beta1.LastOperationTypeReconcile {
 		return reconcile.Result{Requeue: true}, nil
 	} else if isWorkerMigrated(worker) {
-		// Nothing to do
 		return reconcile.Result{}, nil
 	}
 
-	if err := r.actuator.Reconcile(ctx, worker); err != nil {
-		return errorutils.ReconcileErr(fmt.Errorf("error updating worker state: %w", err))
+	if err := r.actuator.Reconcile(ctx, log, worker); err != nil {
+		return reconcilerutils.ReconcileErr(fmt.Errorf("error updating Worker state: %w", err))
 	}
 
-	logger.Info("Successfully updated worker state")
-
+	log.Info("Successfully updated Worker state")
 	return reconcile.Result{}, nil
 }

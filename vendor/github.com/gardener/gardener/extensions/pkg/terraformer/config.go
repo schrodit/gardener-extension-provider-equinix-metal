@@ -16,6 +16,7 @@ package terraformer
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	corev1 "k8s.io/api/core/v1"
@@ -25,7 +26,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	"github.com/gardener/gardener/pkg/controllerutils"
-	kutil "github.com/gardener/gardener/pkg/utils/kubernetes"
+	kubernetesutils "github.com/gardener/gardener/pkg/utils/kubernetes"
 )
 
 const (
@@ -146,7 +147,7 @@ func createOrUpdateConfigMap(ctx context.Context, c client.Client, namespace, na
 			configMap.Data[key] = value
 		}
 		if ownerRef != nil {
-			configMap.SetOwnerReferences(kutil.MergeOwnerReferences(configMap.OwnerReferences, *ownerRef))
+			configMap.SetOwnerReferences(kubernetesutils.MergeOwnerReferences(configMap.OwnerReferences, *ownerRef))
 		}
 		return nil
 	})
@@ -184,7 +185,7 @@ func CreateOrUpdateTFVarsSecret(ctx context.Context, c client.Client, namespace,
 		}
 		secret.Data[TFVarsKey] = tfvars
 		if ownerRef != nil {
-			secret.SetOwnerReferences(kutil.MergeOwnerReferences(secret.OwnerReferences, *ownerRef))
+			secret.SetOwnerReferences(kubernetesutils.MergeOwnerReferences(secret.OwnerReferences, *ownerRef))
 		}
 		return nil
 	})
@@ -225,19 +226,19 @@ func DefaultInitializer(c client.Client, main, variables string, tfvars []byte, 
 func (t *terraformer) NumberOfResources(ctx context.Context) (int, error) {
 	numberOfExistingResources := 0
 
-	if err := t.client.Get(ctx, kutil.Key(t.namespace, t.stateName), &corev1.ConfigMap{}); err == nil {
+	if err := t.client.Get(ctx, kubernetesutils.Key(t.namespace, t.stateName), &corev1.ConfigMap{}); err == nil {
 		numberOfExistingResources++
 	} else if !apierrors.IsNotFound(err) {
 		return -1, err
 	}
 
-	if err := t.client.Get(ctx, kutil.Key(t.namespace, t.variablesName), &corev1.Secret{}); err == nil {
+	if err := t.client.Get(ctx, kubernetesutils.Key(t.namespace, t.variablesName), &corev1.Secret{}); err == nil {
 		numberOfExistingResources++
 	} else if !apierrors.IsNotFound(err) {
 		return -1, err
 	}
 
-	if err := t.client.Get(ctx, kutil.Key(t.namespace, t.configName), &corev1.ConfigMap{}); err == nil {
+	if err := t.client.Get(ctx, kubernetesutils.Key(t.namespace, t.configName), &corev1.ConfigMap{}); err == nil {
 		numberOfExistingResources++
 	} else if !apierrors.IsNotFound(err) {
 		return -1, err
@@ -277,20 +278,19 @@ func (t *terraformer) CleanupConfiguration(ctx context.Context) error {
 
 // RemoveTerraformerFinalizerFromConfig deletes the terraformer finalizer from the two ConfigMaps and the Secret which store the Terraform configuration and state.
 func (t *terraformer) RemoveTerraformerFinalizerFromConfig(ctx context.Context) error {
-	t.logger.Info("Cleaning up all terraformer configuration finalizers")
-
 	for _, obj := range []client.Object{
 		&corev1.Secret{ObjectMeta: metav1.ObjectMeta{Namespace: t.namespace, Name: t.variablesName}},
 		&corev1.ConfigMap{ObjectMeta: metav1.ObjectMeta{Namespace: t.namespace, Name: t.stateName}},
 		&corev1.ConfigMap{ObjectMeta: metav1.ObjectMeta{Namespace: t.namespace, Name: t.configName}},
 	} {
-		if err := t.client.Get(ctx, kutil.Key(t.namespace, obj.GetName()), obj); client.IgnoreNotFound(err) != nil {
+		if err := t.client.Get(ctx, kubernetesutils.Key(t.namespace, obj.GetName()), obj); client.IgnoreNotFound(err) != nil {
 			return err
 		}
 
 		if controllerutil.ContainsFinalizer(obj, TerraformerFinalizer) {
-			if err := controllerutils.PatchRemoveFinalizers(ctx, t.client, obj, TerraformerFinalizer); client.IgnoreNotFound(err) != nil {
-				return err
+			t.logger.Info("Removing finalizer", "obj", client.ObjectKeyFromObject(obj))
+			if err := controllerutils.RemoveFinalizers(ctx, t.client, obj, TerraformerFinalizer); err != nil {
+				return fmt.Errorf("failed to remove finalizer: %w", err)
 			}
 		}
 	}

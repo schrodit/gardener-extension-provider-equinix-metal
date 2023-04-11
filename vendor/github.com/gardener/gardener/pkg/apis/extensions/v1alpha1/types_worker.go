@@ -15,12 +15,12 @@
 package v1alpha1
 
 import (
-	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
-
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/intstr"
+
+	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
 )
 
 var _ Object = (*Worker)(nil)
@@ -151,6 +151,9 @@ type WorkerPool struct {
 	// NodeTemplate contains resource information of the machine which is used by Cluster Autoscaler to generate nodeTemplate during scaling a nodeGroup from zero
 	// +optional
 	NodeTemplate *NodeTemplate `json:"nodeTemplate,omitempty"`
+	// Architecture is the CPU architecture of the worker pool machines and machine image.
+	// +optional
+	Architecture *string `json:"architecture,omitempty"`
 }
 
 // NodeTemplate contains information about the expected node properties.

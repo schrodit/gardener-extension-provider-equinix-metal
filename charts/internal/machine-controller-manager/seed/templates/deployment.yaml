@@ -7,6 +7,7 @@ metadata:
   labels:
     app: kubernetes
     role: machine-controller-manager
+    high-availability-config.resources.gardener.cloud/type: controller
 spec:
   revisionHistoryLimit: 0
   replicas: {{ .Values.replicas }}
@@ -16,9 +17,8 @@ spec:
       role: machine-controller-manager
   template:
     metadata:
-      annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ''
 {{- if .Values.podAnnotations }}
+      annotations:
 {{ toYaml .Values.podAnnotations | indent 8 }}
 {{- end }}
       labels:
@@ -28,9 +28,8 @@ spec:
         networking.gardener.cloud/to-dns: allowed
         networking.gardener.cloud/to-public-networks: allowed
         networking.gardener.cloud/to-private-networks: allowed
-        networking.gardener.cloud/to-seed-apiserver: allowed
-        networking.gardener.cloud/to-shoot-apiserver: allowed
-        networking.gardener.cloud/from-prometheus: allowed
+        networking.gardener.cloud/to-runtime-apiserver: allowed
+        networking.resources.gardener.cloud/to-kube-apiserver-tcp-443: allowed
     spec:
       priorityClassName: gardener-system-300
       serviceAccountName: machine-controller-manager

@@ -21,13 +21,14 @@ import (
 	"reflect"
 	"regexp"
 
-	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
-	"github.com/gardener/gardener/pkg/client/kubernetes"
 	"github.com/hashicorp/go-multierror"
 	"github.com/onsi/ginkgo/v2"
 	apimachineryRuntime "k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"sigs.k8s.io/yaml"
+
+	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
+	"github.com/gardener/gardener/pkg/client/kubernetes"
 )
 
 // Must errors with `GinkgoT().Fatal` if the error is non-nil.
@@ -78,7 +79,7 @@ func Set(dst, src interface{}) {
 	dstValue.Elem().Set(srcValue)
 }
 
-//ComputeTechnicalID computes the technical ID of a shoot
+// ComputeTechnicalID computes the technical ID of a shoot
 func ComputeTechnicalID(projectName string, shoot *gardencorev1beta1.Shoot) string {
 	// Use the stored technical ID in the Shoot's status field if it's there.
 	// For backwards compatibility we keep the pattern as it was before we had to change it

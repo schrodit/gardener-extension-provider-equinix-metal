@@ -19,10 +19,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/gardener/gardener/extensions/pkg/controller/healthcheck"
-	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
-	gardencorev1beta1helper "github.com/gardener/gardener/pkg/apis/core/v1beta1/helper"
-
 	machinev1alpha1 "github.com/gardener/machine-controller-manager/pkg/apis/machine/v1alpha1"
 	"github.com/go-logr/logr"
 	corev1 "k8s.io/api/core/v1"
@@ -30,6 +26,10 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+
+	"github.com/gardener/gardener/extensions/pkg/controller/healthcheck"
+	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
+	v1beta1helper "github.com/gardener/gardener/pkg/apis/core/v1beta1/helper"
 )
 
 const (
@@ -162,7 +162,7 @@ func (h *DefaultHealthChecker) Check(ctx context.Context, request types.Namespac
 			return &healthcheck.SingleCheckResult{
 				Status: gardencorev1beta1.ConditionFalse,
 				Detail: err.Error(),
-				Codes:  gardencorev1beta1helper.DeprecatedDetermineErrorCodes(err),
+				Codes:  v1beta1helper.DeprecatedDetermineErrorCodes(err), // TODO(acumino): Drop error code detection here once extensions get adapted to parse error code from `SingleCheckResult`.
 			}, nil
 		}
 
@@ -180,7 +180,6 @@ func (h *DefaultHealthChecker) Check(ctx context.Context, request types.Namespac
 			return &healthcheck.SingleCheckResult{
 				Status:               status,
 				Detail:               err.Error(),
-				Codes:                gardencorev1beta1helper.DeprecatedDetermineErrorCodes(err),
 				ProgressingThreshold: h.scaleUpProgressingThreshold,
 			}, nil
 		}
@@ -191,7 +190,7 @@ func (h *DefaultHealthChecker) Check(ctx context.Context, request types.Namespac
 		return &healthcheck.SingleCheckResult{
 			Status: gardencorev1beta1.ConditionFalse,
 			Detail: err.Error(),
-			Codes:  gardencorev1beta1helper.DeprecatedDetermineErrorCodes(err),
+			Codes:  v1beta1helper.DeprecatedDetermineErrorCodes(err), // TODO(acumino): Drop error code detection here once extensions get adapted to parse error code from `SingleCheckResult`.
 		}, nil
 	}
 
@@ -200,7 +199,6 @@ func (h *DefaultHealthChecker) Check(ctx context.Context, request types.Namespac
 		return &healthcheck.SingleCheckResult{
 			Status:               status,
 			Detail:               err.Error(),
-			Codes:                gardencorev1beta1helper.DeprecatedDetermineErrorCodes(err),
 			ProgressingThreshold: h.scaleDownProgressingThreshold,
 		}, nil
 	}

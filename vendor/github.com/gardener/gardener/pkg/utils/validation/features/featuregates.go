@@ -19,18 +19,18 @@ import (
 
 	"k8s.io/apimachinery/pkg/util/validation/field"
 
-	utilsversion "github.com/gardener/gardener/pkg/utils/version"
+	versionutils "github.com/gardener/gardener/pkg/utils/version"
 )
 
 // featureGateVersionRanges contains the version ranges for all Kubernetes feature gates.
 // Extracted from https://raw.githubusercontent.com/kubernetes/kubernetes/release-${version}/pkg/features/kube_features.go.
 // To maintain this list for each new Kubernetes version:
-// * Run hack/compare-k8s-feature-gates.sh <old-version> <new-version> (e.g. 'hack/compare-k8s-feature-gates.sh 1.22 1.23').
-//   It will present 3 lists of feature gates: those added and those removed in <new-version> compared to <old-version> and
-//   feature gates that got locked to default in `<new-version>`.
-// * Add all added feature gates to the map with <new-version> as AddedInVersion and no RemovedInVersion.
-// * For any removed feature gates, add <new-version> as RemovedInVersion to the already existing feature gate in the map.
-// * For feature gates locked to default, add `<new-version>` as LockedToDefaultInVersion to the already existing feature gate in the map.
+//   - Run hack/compare-k8s-feature-gates.sh <old-version> <new-version> (e.g. 'hack/compare-k8s-feature-gates.sh 1.22 1.23').
+//     It will present 3 lists of feature gates: those added and those removed in <new-version> compared to <old-version> and
+//     feature gates that got locked to default in `<new-version>`.
+//   - Add all added feature gates to the map with <new-version> as AddedInVersion and no RemovedInVersion.
+//   - For any removed feature gates, add <new-version> as RemovedInVersion to the already existing feature gate in the map.
+//   - For feature gates locked to default, add `<new-version>` as LockedToDefaultInVersion to the already existing feature gate in the map.
 var featureGateVersionRanges = map[string]*FeatureGateVersionRange{
 	// These are special feature gates to toggle all alpha or beta feature gates on and off.
 	// They were introduced in version 1.17 (although they are absent from the corresponding kube_features.go file).
@@ -40,9 +40,11 @@ var featureGateVersionRanges = map[string]*FeatureGateVersionRange{
 	"APIListChunking":                                {},
 	"APIPriorityAndFairness":                         {AddedInVersion: "1.17"},
 	"APIResponseCompression":                         {},
+	"APISelfSubjectReview":                           {AddedInVersion: "1.26"},
 	"APIServerIdentity":                              {AddedInVersion: "1.20"},
 	"APIServerTracing":                               {AddedInVersion: "1.22"},
 	"AdvancedAuditing":                               {},
+	"AggregatedDiscoveryEndpoint":                    {AddedInVersion: "1.26"},
 	"AllowInsecureBackendProxy":                      {AddedInVersion: "1.17", RemovedInVersion: "1.23"},
 	"AnyVolumeDataSource":                            {AddedInVersion: "1.18"},
 	"AppArmor":                                       {},
@@ -50,7 +52,7 @@ var featureGateVersionRanges = map[string]*FeatureGateVersionRange{
 	"BalanceAttachedNodeVolumes":                     {RemovedInVersion: "1.22"},
 	"BlockVolume":                                    {RemovedInVersion: "1.21"},
 	"BoundServiceAccountTokenVolume":                 {RemovedInVersion: "1.23"},
-	"CPUManager":                                     {},
+	"CPUManager":                                     {LockedToDefaultInVersion: "1.26"},
 	"CPUManagerPolicyAlphaOptions":                   {AddedInVersion: "1.23"},
 	"CPUManagerPolicyBetaOptions":                    {AddedInVersion: "1.23"},
 	"CPUManagerPolicyOptions":                        {AddedInVersion: "1.22"},
@@ -58,32 +60,36 @@ var featureGateVersionRanges = map[string]*FeatureGateVersionRange{
 	"CronJobTimeZone":                                {AddedInVersion: "1.24"},
 	"CSIBlockVolume":                                 {RemovedInVersion: "1.21"},
 	"CSIDriverRegistry":                              {RemovedInVersion: "1.21"},
-	"CSIInlineVolume":                                {},
-	"CSIMigration":                                   {},
-	"CSIMigrationAWS":                                {},
+	"CSIInlineVolume":                                {Default: true, LockedToDefaultInVersion: "1.25"},
+	"CSIMigration":                                   {Default: true, LockedToDefaultInVersion: "1.25"},
+	"CSIMigrationAWS":                                {Default: true, LockedToDefaultInVersion: "1.25"},
 	"CSIMigrationAWSComplete":                        {AddedInVersion: "1.17", RemovedInVersion: "1.21"},
-	"CSIMigrationAzureDisk":                          {},
+	"CSIMigrationAzureDisk":                          {Default: true, LockedToDefaultInVersion: "1.25"},
 	"CSIMigrationAzureDiskComplete":                  {AddedInVersion: "1.17", RemovedInVersion: "1.21"},
 	"CSIMigrationAzureFile":                          {},
 	"CSIMigrationAzureFileComplete":                  {AddedInVersion: "1.17", RemovedInVersion: "1.21"},
-	"CSIMigrationGCE":                                {},
+	"CSIMigrationGCE":                                {Default: true, LockedToDefaultInVersion: "1.25"},
 	"CSIMigrationGCEComplete":                        {AddedInVersion: "1.17", RemovedInVersion: "1.21"},
-	"CSIMigrationOpenStack":                          {Default: true, AddedInVersion: "1.14", LockedToDefaultInVersion: "1.24"},
+	"CSIMigrationOpenStack":                          {Default: true, AddedInVersion: "1.14", LockedToDefaultInVersion: "1.24", RemovedInVersion: "1.26"},
 	"CSIMigrationOpenStackComplete":                  {AddedInVersion: "1.17", RemovedInVersion: "1.21"},
 	"CSIMigrationPortworx":                           {AddedInVersion: "1.23"},
 	"CSIMigrationRBD":                                {AddedInVersion: "1.24"},
-	"CSIMigrationvSphere":                            {AddedInVersion: "1.19"},
+	"CSIMigrationvSphere":                            {AddedInVersion: "1.19", LockedToDefaultInVersion: "1.26"},
 	"CSIMigrationvSphereComplete":                    {AddedInVersion: "1.19", RemovedInVersion: "1.22"},
+	"CSINodeExpandSecret":                            {AddedInVersion: "1.25"},
 	"CSINodeInfo":                                    {RemovedInVersion: "1.21"},
 	"CSIPersistentVolume":                            {RemovedInVersion: "1.16"},
-	"CSIServiceAccountToken":                         {Default: true, AddedInVersion: "1.20", LockedToDefaultInVersion: "1.22"},
+	"CSIServiceAccountToken":                         {Default: true, AddedInVersion: "1.20", LockedToDefaultInVersion: "1.22", RemovedInVersion: "1.25"},
 	"CSIStorageCapacity":                             {Default: true, AddedInVersion: "1.19", LockedToDefaultInVersion: "1.24"},
-	"CSIVolumeFSGroupPolicy":                         {Default: true, AddedInVersion: "1.19", LockedToDefaultInVersion: "1.23"},
+	"CSIVolumeFSGroupPolicy":                         {Default: true, AddedInVersion: "1.19", LockedToDefaultInVersion: "1.23", RemovedInVersion: "1.25"},
 	"CSIVolumeHealth":                                {AddedInVersion: "1.21"},
-	"CSRDuration":                                    {Default: true, AddedInVersion: "1.22", LockedToDefaultInVersion: "1.24"},
-	"ConfigurableFSGroupPolicy":                      {Default: true, AddedInVersion: "1.18", LockedToDefaultInVersion: "1.23"},
+	"CSRDuration":                                    {Default: true, AddedInVersion: "1.22", LockedToDefaultInVersion: "1.24", RemovedInVersion: "1.26"},
+	"ConfigurableFSGroupPolicy":                      {Default: true, AddedInVersion: "1.18", LockedToDefaultInVersion: "1.23", RemovedInVersion: "1.25"},
+	"ConsistentHTTPGetHandlers":                      {AddedInVersion: "1.26"},
+	"ContainerCheckpoint":                            {AddedInVersion: "1.25"},
 	"ControllerManagerLeaderMigration":               {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.24"}, // Missing from docu?
 	"CronJobControllerV2":                            {AddedInVersion: "1.20", RemovedInVersion: "1.23"},
+	"CrossNamespaceVolumeDataSource":                 {AddedInVersion: "1.26"},
 	"CustomCPUCFSQuotaPeriod":                        {},
 	"CustomPodDNS":                                   {RemovedInVersion: "1.16"},
 	"CustomResourceDefaulting":                       {RemovedInVersion: "1.18"},
@@ -92,27 +98,29 @@ var featureGateVersionRanges = map[string]*FeatureGateVersionRange{
 	"CustomResourceValidation":                       {RemovedInVersion: "1.18"},
 	"CustomResourceValidationExpressions":            {AddedInVersion: "1.23"},
 	"CustomResourceWebhookConversion":                {RemovedInVersion: "1.18"},
-	"DaemonSetUpdateSurge":                           {AddedInVersion: "1.21"},                           // Missing from docu?
-	"DebugContainers":                                {RemovedInVersion: "1.16"},                         // Missing from docu?
-	"DefaultIngressClass":                            {AddedInVersion: "1.18", RemovedInVersion: "1.20"}, // Missing from docu?
-	"DefaultPodTopologySpread":                       {Default: true, AddedInVersion: "1.19", LockedToDefaultInVersion: "1.24"},
-	"DelegateFSGroupToCSIDriver":                     {AddedInVersion: "1.22"},
-	"DevicePlugins":                                  {},
-	"DisableAcceleratorUsageMetrics":                 {AddedInVersion: "1.19"},
+	"DaemonSetUpdateSurge":                           {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.25"}, // Missing from docu?
+	"DebugContainers":                                {RemovedInVersion: "1.16"},                                                // Missing from docu?
+	"DefaultIngressClass":                            {AddedInVersion: "1.18", RemovedInVersion: "1.20"},                        // Missing from docu?
+	"DefaultPodTopologySpread":                       {Default: true, AddedInVersion: "1.19", LockedToDefaultInVersion: "1.24", RemovedInVersion: "1.26"},
+	"DelegateFSGroupToCSIDriver":                     {AddedInVersion: "1.22", LockedToDefaultInVersion: "1.26"},
+	"DevicePlugins":                                  {LockedToDefaultInVersion: "1.26"},
+	"DisableAcceleratorUsageMetrics":                 {Default: true, AddedInVersion: "1.19", LockedToDefaultInVersion: "1.25"},
 	"DisableCloudProviders":                          {AddedInVersion: "1.22"},
 	"DisableKubeletCloudCredentialProviders":         {AddedInVersion: "1.23"},
 	"DownwardAPIHugePages":                           {AddedInVersion: "1.20"},
-	"DryRun":                                         {},
+	"DryRun":                                         {LockedToDefaultInVersion: "1.26"},
 	"DynamicAuditing":                                {RemovedInVersion: "1.19"},
-	"DynamicKubeletConfig":                           {},
+	"DynamicKubeletConfig":                           {RemovedInVersion: "1.26"},
+	"DynamicResourceAllocation":                      {AddedInVersion: "1.26"},
 	"EfficientWatchResumption":                       {Default: true, AddedInVersion: "1.20", LockedToDefaultInVersion: "1.24"},
 	"EnableAggregatedDiscoveryTimeout":               {AddedInVersion: "1.16", RemovedInVersion: "1.17"},
-	"EndpointSlice":                                  {Default: true, AddedInVersion: "1.16", LockedToDefaultInVersion: "1.21"},
-	"EndpointSliceNodeName":                          {Default: true, AddedInVersion: "1.20", LockedToDefaultInVersion: "1.21"},
-	"EndpointSliceProxying":                          {Default: true, AddedInVersion: "1.18", LockedToDefaultInVersion: "1.22"},
-	"EndpointSliceTerminatingCondition":              {AddedInVersion: "1.20"},
-	"EphemeralContainers":                            {AddedInVersion: "1.16"},
+	"EndpointSlice":                                  {Default: true, AddedInVersion: "1.16", LockedToDefaultInVersion: "1.21", RemovedInVersion: "1.25"},
+	"EndpointSliceNodeName":                          {Default: true, AddedInVersion: "1.20", LockedToDefaultInVersion: "1.21", RemovedInVersion: "1.25"},
+	"EndpointSliceProxying":                          {Default: true, AddedInVersion: "1.18", LockedToDefaultInVersion: "1.22", RemovedInVersion: "1.25"},
+	"EndpointSliceTerminatingCondition":              {AddedInVersion: "1.20", LockedToDefaultInVersion: "1.26"},
+	"EphemeralContainers":                            {Default: true, AddedInVersion: "1.16", LockedToDefaultInVersion: "1.25"},
 	"EvenPodsSpread":                                 {AddedInVersion: "1.16", RemovedInVersion: "1.21"},
+	"EventedPLEG":                                    {AddedInVersion: "1.26"},
 	"ExecProbeTimeout":                               {AddedInVersion: "1.20"},
 	"ExpandCSIVolumes":                               {},
 	"ExpandedDNSConfig":                              {AddedInVersion: "1.22"},
@@ -123,7 +131,7 @@ var featureGateVersionRanges = map[string]*FeatureGateVersionRange{
 	"ExternalPolicyForExternalIP":                    {AddedInVersion: "1.18", RemovedInVersion: "1.22"}, // Missing from docu?
 	"GCERegionalPersistentDisk":                      {RemovedInVersion: "1.17"},
 	"GRPCContainerProbe":                             {AddedInVersion: "1.23"},
-	"GenericEphemeralVolume":                         {Default: true, AddedInVersion: "1.19", LockedToDefaultInVersion: "1.23"},
+	"GenericEphemeralVolume":                         {Default: true, AddedInVersion: "1.19", LockedToDefaultInVersion: "1.23", RemovedInVersion: "1.25"},
 	"GracefulNodeShutdown":                           {AddedInVersion: "1.20"},
 	"GracefulNodeShutdownBasedOnPodPriority":         {AddedInVersion: "1.23"},
 	"HonorPVReclaimPolicy":                           {AddedInVersion: "1.23"},
@@ -133,7 +141,8 @@ var featureGateVersionRanges = map[string]*FeatureGateVersionRange{
 	"HugePages":                                      {RemovedInVersion: "1.16"},
 	"HyperVContainer":                                {RemovedInVersion: "1.21"},
 	"IPv6DualStack":                                  {Default: true, AddedInVersion: "1.16", LockedToDefaultInVersion: "1.23"},
-	"IdentifyPodOS":                                  {AddedInVersion: "1.23"},
+	"IPTablesOwnershipCleanup":                       {AddedInVersion: "1.25"},
+	"IdentifyPodOS":                                  {Default: true, AddedInVersion: "1.23", LockedToDefaultInVersion: "1.25"},
 	"ImmutableEphemeralVolumes":                      {Default: true, AddedInVersion: "1.18", LockedToDefaultInVersion: "1.21", RemovedInVersion: "1.24"},
 	"InTreePluginAWSUnregister":                      {AddedInVersion: "1.21"}, // Missing from docu?
 	"InTreePluginAzureDiskUnregister":                {AddedInVersion: "1.21"}, // Missing from docu?
@@ -143,49 +152,61 @@ var featureGateVersionRanges = map[string]*FeatureGateVersionRange{
 	"InTreePluginPortworxUnregister":                 {AddedInVersion: "1.23"},
 	"InTreePluginRBDUnregister":                      {AddedInVersion: "1.23"},
 	"InTreePluginvSphereUnregister":                  {AddedInVersion: "1.21"}, // Missing from docu?
-	"IndexedJob":                                     {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.24"},
-	"IngressClassNamespacedParams":                   {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.23"},
+	"IndexedJob":                                     {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.24", RemovedInVersion: "1.26"},
+	"IngressClassNamespacedParams":                   {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.23", RemovedInVersion: "1.25"},
 	"JobMutableNodeSchedulingDirectives":             {AddedInVersion: "1.23"},
+	"JobPodFailurePolicy":                            {AddedInVersion: "1.25"},
 	"JobReadyPods":                                   {AddedInVersion: "1.23"},
-	"JobTrackingWithFinalizers":                      {AddedInVersion: "1.22"},
-	"KubeletCredentialProviders":                     {AddedInVersion: "1.20"},
+	"JobTrackingWithFinalizers":                      {AddedInVersion: "1.22", LockedToDefaultInVersion: "1.26"},
+	"KMSv2":                                          {AddedInVersion: "1.25"},
+	"KubeletCredentialProviders":                     {AddedInVersion: "1.20", LockedToDefaultInVersion: "1.26"},
 	"KubeletInUserNamespace":                         {AddedInVersion: "1.22"},
 	"KubeletPluginsWatcher":                          {RemovedInVersion: "1.16"},
 	"KubeletPodResources":                            {},
 	"KubeletPodResourcesGetAllocatable":              {AddedInVersion: "1.21"},
+	"KubeletTracing":                                 {AddedInVersion: "1.25"},
 	"LegacyNodeRoleBehavior":                         {AddedInVersion: "1.16", RemovedInVersion: "1.22"},
 	"LegacyServiceAccountTokenNoAutoGeneration":      {AddedInVersion: "1.24"},
-	"LocalStorageCapacityIsolation":                  {},
+	"LegacyServiceAccountTokenTracking":              {AddedInVersion: "1.26"},
+	"LocalStorageCapacityIsolation":                  {Default: true, LockedToDefaultInVersion: "1.25"},
 	"LocalStorageCapacityIsolationFSQuotaMonitoring": {},
 	"LogarithmicScaleDown":                           {AddedInVersion: "1.21"},
+	"MatchLabelKeysInPodTopologySpread":              {AddedInVersion: "1.25"},
 	"MaxUnavailableStatefulSet":                      {AddedInVersion: "1.24"},
 	"MemoryManager":                                  {AddedInVersion: "1.21"}, // Missing from docu?
 	"MemoryQoS":                                      {AddedInVersion: "1.22"},
 	"MigrationRBD":                                   {AddedInVersion: "1.23", RemovedInVersion: "1.24"},
 	"MinDomainsInPodTopologySpread":                  {AddedInVersion: "1.24"},
-	"MixedProtocolLBService":                         {AddedInVersion: "1.20"},
+	"MinimizeIPTablesRestore":                        {AddedInVersion: "1.26"},
+	"MixedProtocolLBService":                         {AddedInVersion: "1.20", LockedToDefaultInVersion: "1.26"},
 	"MountContainers":                                {RemovedInVersion: "1.17"},
+	"MultiCIDRRangeAllocator":                        {AddedInVersion: "1.25"},
 	"NamespaceDefaultLabelName":                      {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.22", RemovedInVersion: "1.24"},
-	"NetworkPolicyEndPort":                           {AddedInVersion: "1.21"},
+	"NetworkPolicyEndPort":                           {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.25"},
 	"NetworkPolicyStatus":                            {AddedInVersion: "1.24"},
 	"NodeDisruptionExclusion":                        {AddedInVersion: "1.16", RemovedInVersion: "1.22"},
+	"NodeInclusionPolicyInPodTopologySpread":         {AddedInVersion: "1.25"},
 	"NodeLease":                                      {RemovedInVersion: "1.23"},
 	"NodeOutOfServiceVolumeDetach":                   {AddedInVersion: "1.24"},
-	"NonPreemptingPriority":                          {Default: true, LockedToDefaultInVersion: "1.24"},
+	"NonPreemptingPriority":                          {Default: true, LockedToDefaultInVersion: "1.24", RemovedInVersion: "1.26"},
 	"NodeSwap":                                       {AddedInVersion: "1.22"},
 	"OpenAPIEnums":                                   {AddedInVersion: "1.23"},
 	"OpenAPIV3":                                      {AddedInVersion: "1.23"},
+	"PDBUnhealthyPodEvictionPolicy":                  {AddedInVersion: "1.26"},
 	"PersistentLocalVolumes":                         {RemovedInVersion: "1.17"},
 	"PodAndContainerStatsFromCRI":                    {AddedInVersion: "1.23"},
-	"PodAffinityNamespaceSelector":                   {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.24"},
+	"PodAffinityNamespaceSelector":                   {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.24", RemovedInVersion: "1.26"},
 	"PodDeletionCost":                                {AddedInVersion: "1.21"},
-	"PodDisruptionBudget":                            {Default: true, AddedInVersion: "1.17", LockedToDefaultInVersion: "1.21"}, // Docu says 1.3?
-	"PodOverhead":                                    {Default: true, AddedInVersion: "1.16", LockedToDefaultInVersion: "1.24"},
+	"PodDisruptionBudget":                            {Default: true, AddedInVersion: "1.17", LockedToDefaultInVersion: "1.21", RemovedInVersion: "1.25"}, // Docu says 1.3?
+	"PodDisruptionConditions":                        {AddedInVersion: "1.25"},
+	"PodHasNetworkCondition":                         {AddedInVersion: "1.25"},
+	"PodOverhead":                                    {Default: true, AddedInVersion: "1.16", LockedToDefaultInVersion: "1.24", RemovedInVersion: "1.26"},
 	"PodPriority":                                    {RemovedInVersion: "1.18"},
 	"PodReadinessGates":                              {RemovedInVersion: "1.16"},
-	"PodSecurity":                                    {AddedInVersion: "1.22"},
+	"PodSchedulingReadiness":                         {AddedInVersion: "1.26"},
+	"PodSecurity":                                    {Default: true, AddedInVersion: "1.22", LockedToDefaultInVersion: "1.25"},
 	"PodShareProcessNamespace":                       {RemovedInVersion: "1.19"},
-	"PreferNominatedNode":                            {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.24"}, // Missing from docu?
+	"PreferNominatedNode":                            {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.24", RemovedInVersion: "1.26"}, // Missing from docu?
 	"ProbeTerminationGracePeriod":                    {AddedInVersion: "1.21"},
 	"ProcMountType":                                  {},
 	"ProxyTerminatingEndpoints":                      {AddedInVersion: "1.22"},
@@ -197,6 +218,7 @@ var featureGateVersionRanges = map[string]*FeatureGateVersionRange{
 	"RequestManagement":                              {RemovedInVersion: "1.17"},
 	"ResourceLimitsPriorityFunction":                 {RemovedInVersion: "1.19"},
 	"ResourceQuotaScopeSelectors":                    {RemovedInVersion: "1.18"},
+	"RetroactiveDefaultStorageClass":                 {AddedInVersion: "1.25"},
 	"RootCAConfigMap":                                {AddedInVersion: "1.20", RemovedInVersion: "1.22"}, // Docu says 1.13?
 	"RotateKubeletClientCertificate":                 {RemovedInVersion: "1.21"},
 	"RotateKubeletServerCertificate":                 {},
@@ -205,15 +227,16 @@ var featureGateVersionRanges = map[string]*FeatureGateVersionRange{
 	"SCTPSupport":                                    {RemovedInVersion: "1.22"},
 	"ScheduleDaemonSetPods":                          {RemovedInVersion: "1.18"},
 	"SeccompDefault":                                 {AddedInVersion: "1.22"},
-	"SelectorIndex":                                  {Default: true, AddedInVersion: "1.18", LockedToDefaultInVersion: "1.20"}, // Missing from docu?
-	"ServerSideApply":                                {},
+	"SelectorIndex":                                  {Default: true, AddedInVersion: "1.18", LockedToDefaultInVersion: "1.20", RemovedInVersion: "1.25"}, // Missing from docu?
+	"SELinuxMountReadWriteOncePod":                   {AddedInVersion: "1.25"},
+	"ServerSideApply":                                {LockedToDefaultInVersion: "1.26"},
 	"ServerSideFieldValidation":                      {AddedInVersion: "1.23"},
 	"ServiceAccountIssuerDiscovery":                  {AddedInVersion: "1.18", RemovedInVersion: "1.23"},
 	"ServiceAppProtocol":                             {AddedInVersion: "1.18", RemovedInVersion: "1.22"},
-	"ServiceInternalTrafficPolicy":                   {AddedInVersion: "1.21"},
-	"ServiceIPStaticSubrange":                        {AddedInVersion: "1.24"},
-	"ServiceLBNodePortControl":                       {Default: true, AddedInVersion: "1.20", LockedToDefaultInVersion: "1.24"},
-	"ServiceLoadBalancerClass":                       {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.24"},
+	"ServiceInternalTrafficPolicy":                   {AddedInVersion: "1.21", LockedToDefaultInVersion: "1.26"},
+	"ServiceIPStaticSubrange":                        {AddedInVersion: "1.24", LockedToDefaultInVersion: "1.26"},
+	"ServiceLBNodePortControl":                       {Default: true, AddedInVersion: "1.20", LockedToDefaultInVersion: "1.24", RemovedInVersion: "1.26"},
+	"ServiceLoadBalancerClass":                       {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.24", RemovedInVersion: "1.26"},
 	"ServiceLoadBalancerFinalizer":                   {RemovedInVersion: "1.20"},
 	"ServiceNodeExclusion":                           {RemovedInVersion: "1.22"},
 	"ServiceTopology":                                {AddedInVersion: "1.17", RemovedInVersion: "1.22"},
@@ -221,37 +244,44 @@ var featureGateVersionRanges = map[string]*FeatureGateVersionRange{
 	"SizeMemoryBackedVolumes":                        {AddedInVersion: "1.20"},
 	"StartupProbe":                                   {AddedInVersion: "1.16", RemovedInVersion: "1.23"},
 	"StatefulSetAutoDeletePVC":                       {AddedInVersion: "1.23"},
-	"StatefulSetMinReadySeconds":                     {AddedInVersion: "1.22"},
-	"StorageObjectInUseProtection":                   {Default: true, LockedToDefaultInVersion: "1.23"},
+	"StatefulSetMinReadySeconds":                     {Default: true, AddedInVersion: "1.22", LockedToDefaultInVersion: "1.25"},
+	"StatefulSetStartOrdinal":                        {AddedInVersion: "1.26"},
+	"StorageObjectInUseProtection":                   {Default: true, LockedToDefaultInVersion: "1.23", RemovedInVersion: "1.25"},
 	"StorageVersionAPI":                              {AddedInVersion: "1.20"},
 	"StorageVersionHash":                             {},
 	"StreamingProxyRedirects":                        {RemovedInVersion: "1.24"},
 	"SupportIPVSProxyMode":                           {RemovedInVersion: "1.20"},
 	"SupportNodePidsLimit":                           {RemovedInVersion: "1.23"},
 	"SupportPodPidsLimit":                            {RemovedInVersion: "1.23"},
-	"SuspendJob":                                     {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.24"},
+	"SuspendJob":                                     {Default: true, AddedInVersion: "1.21", LockedToDefaultInVersion: "1.24", RemovedInVersion: "1.26"},
 	"Sysctls":                                        {RemovedInVersion: "1.23"},
-	"TTLAfterFinished":                               {Default: true, LockedToDefaultInVersion: "1.23"},
+	"TTLAfterFinished":                               {Default: true, LockedToDefaultInVersion: "1.23", RemovedInVersion: "1.25"},
 	"TaintBasedEvictions":                            {RemovedInVersion: "1.20"},
 	"TaintNodesByCondition":                          {RemovedInVersion: "1.18"},
 	"TokenRequest":                                   {RemovedInVersion: "1.21"},
 	"TokenRequestProjection":                         {RemovedInVersion: "1.21"},
 	"TopologyAwareHints":                             {AddedInVersion: "1.21"},
 	"TopologyManager":                                {AddedInVersion: "1.16"},
+	"TopologyManagerPolicyAlphaOptions":              {AddedInVersion: "1.26"},
+	"TopologyManagerPolicyBetaOptions":               {AddedInVersion: "1.26"},
+	"TopologyManagerPolicyOptions":                   {AddedInVersion: "1.26"},
+	"UserNamespacesStatelessPodsSupport":             {AddedInVersion: "1.25"},
 	"ValidateProxyRedirects":                         {RemovedInVersion: "1.24"},
+	"ValidatingAdmissionPolicy":                      {AddedInVersion: "1.26"},
 	"VolumeCapacityPriority":                         {AddedInVersion: "1.21"},
 	"VolumePVCDataSource":                            {RemovedInVersion: "1.21"},
 	"VolumeScheduling":                               {RemovedInVersion: "1.16"},
 	"VolumeSnapshotDataSource":                       {RemovedInVersion: "1.22"},
-	"VolumeSubpath":                                  {},
+	"VolumeSubpath":                                  {RemovedInVersion: "1.25"},
 	"VolumeSubpathEnvExpansion":                      {RemovedInVersion: "1.19"},
 	"WarningHeaders":                                 {Default: true, AddedInVersion: "1.19", LockedToDefaultInVersion: "1.22", RemovedInVersion: "1.24"},
 	"WatchBookmark":                                  {Default: true, LockedToDefaultInVersion: "1.17"},
 	"WinDSR":                                         {},
 	"WinOverlay":                                     {},
-	"WindowsEndpointSliceProxying":                   {Default: true, AddedInVersion: "1.19", LockedToDefaultInVersion: "1.22"},
+	"WindowsEndpointSliceProxying":                   {Default: true, AddedInVersion: "1.19", LockedToDefaultInVersion: "1.22", RemovedInVersion: "1.25"},
 	"WindowsGMSA":                                    {RemovedInVersion: "1.21"},
-	"WindowsHostProcessContainers":                   {AddedInVersion: "1.22"},
+	"WindowsHostNetwork":                             {AddedInVersion: "1.26"},
+	"WindowsHostProcessContainers":                   {AddedInVersion: "1.22", LockedToDefaultInVersion: "1.26"},
 	"WindowsRunAsUserName":                           {AddedInVersion: "1.16", RemovedInVersion: "1.21"},
 }
 
@@ -289,7 +319,7 @@ func (r *FeatureGateVersionRange) Contains(version string) (bool, error) {
 	default:
 		constraint = "*"
 	}
-	return utilsversion.CheckVersionMeetsConstraint(version, constraint)
+	return versionutils.CheckVersionMeetsConstraint(version, constraint)
 }
 
 func isFeatureLockedToDefault(featureGate, version string) (bool, error) {
@@ -297,7 +327,7 @@ func isFeatureLockedToDefault(featureGate, version string) (bool, error) {
 	vr := featureGateVersionRanges[featureGate]
 	if vr.LockedToDefaultInVersion != "" {
 		constraint = fmt.Sprintf(">= %s", vr.LockedToDefaultInVersion)
-		return utilsversion.CheckVersionMeetsConstraint(version, constraint)
+		return versionutils.CheckVersionMeetsConstraint(version, constraint)
 	}
 
 	return false, nil

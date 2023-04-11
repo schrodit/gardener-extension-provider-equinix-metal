@@ -18,6 +18,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
@@ -57,13 +58,17 @@ type GetExtensionObjectListFunc = func() client.ObjectList
 // PreCheckFunc checks whether the health check shall be performed based on the given object and cluster.
 type PreCheckFunc = func(context.Context, client.Client, client.Object, *extensionscontroller.Cluster) bool
 
+// ErrorCodeCheckFunc checks if the given error is user specific and return respective Gardener ErrorCodes.
+type ErrorCodeCheckFunc = func(error) []gardencorev1beta1.ErrorCode
+
 // ConditionTypeToHealthCheck registers a HealthCheck for the given ConditionType. If the PreCheckFunc is not nil it will
 // be executed with the given object before the health check if performed. Otherwise, the health check will always be
 // performed.
 type ConditionTypeToHealthCheck struct {
-	ConditionType string
-	PreCheckFunc  PreCheckFunc
-	HealthCheck   HealthCheck
+	ConditionType      string
+	PreCheckFunc       PreCheckFunc
+	HealthCheck        HealthCheck
+	ErrorCodeCheckFunc ErrorCodeCheckFunc
 }
 
 // HealthCheckActuator acts upon registered resources.
@@ -74,7 +79,7 @@ type HealthCheckActuator interface {
 	//  - Result for each healthConditionTypes registered with the individual health checks.
 	//  - an error if it could not execute the health checks.
 	//    This results in a condition with with type "Unknown" with reason "ConditionCheckError".
-	ExecuteHealthCheckFunctions(context.Context, types.NamespacedName) (*[]Result, error)
+	ExecuteHealthCheckFunctions(context.Context, logr.Logger, types.NamespacedName) (*[]Result, error)
 }
 
 // Result represents an aggregated health status for the health checks performed on the dependent API Objects of an extension resource.

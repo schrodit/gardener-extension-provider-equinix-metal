@@ -18,12 +18,10 @@ import (
 	machinev1alpha1 "github.com/gardener/machine-controller-manager/pkg/apis/machine/v1alpha1"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
-	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
-	"github.com/gardener/gardener/extensions/pkg/controller/common"
 	extensionspredicate "github.com/gardener/gardener/extensions/pkg/predicate"
 	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
 	"github.com/gardener/gardener/pkg/controllerutils/mapper"
@@ -33,9 +31,9 @@ const (
 	// FinalizerName is the worker controller finalizer.
 	FinalizerName = "extensions.gardener.cloud/worker"
 	// ControllerName is the name of the controller.
-	ControllerName = "worker_controller"
-	// StateUpdatingControllerName is the name of the controller responsible for updating the worker's state.
-	StateUpdatingControllerName = "worker_state_controller"
+	ControllerName = "worker"
+	// ControllerNameState is the name of the controller responsible for updating the worker's state.
+	ControllerNameState = "worker-state"
 )
 
 // AddArgs are arguments for adding an worker controller to a manager.
@@ -65,8 +63,8 @@ func DefaultPredicates(ignoreOperationAnnotation bool) []predicate.Predicate {
 // Add creates a new Worker Controller and adds it to the Manager.
 // and Start it when the Manager is Started.
 func Add(mgr manager.Manager, args AddArgs) error {
-	args.ControllerOptions.Reconciler = NewReconciler(args.Actuator, common.GetDefaultOwnerCheckWatchdogManager())
-	args.ControllerOptions.RecoverPanic = true
+	args.ControllerOptions.Reconciler = NewReconciler(args.Actuator)
+
 	predicates := extensionspredicate.AddTypePredicate(args.Predicates, args.Type)
 	if err := add(mgr, args, predicates); err != nil {
 		return err
@@ -85,7 +83,7 @@ func add(mgr manager.Manager, args AddArgs, predicates []predicate.Predicate) er
 	if args.IgnoreOperationAnnotation {
 		if err := ctrl.Watch(
 			&source.Kind{Type: &extensionsv1alpha1.Cluster{}},
-			mapper.EnqueueRequestsFrom(ClusterToWorkerMapper(predicates), mapper.UpdateWithNew),
+			mapper.EnqueueRequestsFrom(ClusterToWorkerMapper(predicates), mapper.UpdateWithNew, ctrl.GetLogger()),
 		); err != nil {
 			return err
 		}
@@ -96,8 +94,8 @@ func add(mgr manager.Manager, args AddArgs, predicates []predicate.Predicate) er
 
 func addStateUpdatingController(mgr manager.Manager, options controller.Options, extensionType string) error {
 	var (
-		stateActuator   = NewStateActuator(log.Log.WithName("worker-state-actuator"))
-		stateReconciler = NewStateReconciler(mgr, stateActuator)
+		stateActuator   = NewStateActuator()
+		stateReconciler = NewStateReconciler(stateActuator)
 
 		addStateUpdatingControllerOptions = controller.Options{
 			MaxConcurrentReconciles: options.MaxConcurrentReconciles,
@@ -115,14 +113,14 @@ func addStateUpdatingController(mgr manager.Manager, options controller.Options,
 		}
 	)
 
-	ctrl, err := controller.New(StateUpdatingControllerName, mgr, addStateUpdatingControllerOptions)
+	ctrl, err := controller.New(ControllerNameState, mgr, addStateUpdatingControllerOptions)
 	if err != nil {
 		return err
 	}
 
 	if err := ctrl.Watch(
 		&source.Kind{Type: &machinev1alpha1.MachineSet{}},
-		mapper.EnqueueRequestsFrom(MachineSetToWorkerMapper(workerPredicates), mapper.UpdateWithNew),
+		mapper.EnqueueRequestsFrom(MachineSetToWorkerMapper(workerPredicates), mapper.UpdateWithNew, ctrl.GetLogger()),
 		machinePredicates...,
 	); err != nil {
 		return err
@@ -130,7 +128,7 @@ func addStateUpdatingController(mgr manager.Manager, options controller.Options,
 
 	return ctrl.Watch(
 		&source.Kind{Type: &machinev1alpha1.Machine{}},
-		mapper.EnqueueRequestsFrom(MachineToWorkerMapper(workerPredicates), mapper.UpdateWithNew),
+		mapper.EnqueueRequestsFrom(MachineToWorkerMapper(workerPredicates), mapper.UpdateWithNew, ctrl.GetLogger()),
 		machinePredicates...,
 	)
 }

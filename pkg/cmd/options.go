@@ -15,6 +15,16 @@
 package cmd
 
 import (
+	controllercmd "github.com/gardener/gardener/extensions/pkg/controller/cmd"
+	extensionscontrolplanecontroller "github.com/gardener/gardener/extensions/pkg/controller/controlplane"
+	extensionshealthcheckcontroller "github.com/gardener/gardener/extensions/pkg/controller/healthcheck"
+	extensionsheartbeatcontroller "github.com/gardener/gardener/extensions/pkg/controller/heartbeat"
+	extensionsinfrastructurecontroller "github.com/gardener/gardener/extensions/pkg/controller/infrastructure"
+	extensionsworkercontroller "github.com/gardener/gardener/extensions/pkg/controller/worker"
+	webhookcmd "github.com/gardener/gardener/extensions/pkg/webhook/cmd"
+	extensioncontrolplanewebhook "github.com/gardener/gardener/extensions/pkg/webhook/controlplane"
+	extensionshootwebhook "github.com/gardener/gardener/extensions/pkg/webhook/shoot"
+
 	controlplanecontroller "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/controller/controlplane"
 	healthcheckcontroller "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/controller/healthcheck"
 	infrastructurecontroller "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/controller/infrastructure"
@@ -22,15 +32,6 @@ import (
 	controlplanewebhook "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/webhook/controlplane"
 	controlplaneexposurewebhook "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/webhook/controlplaneexposure"
 	shootwebhook "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/webhook/shoot"
-
-	controllercmd "github.com/gardener/gardener/extensions/pkg/controller/cmd"
-	extensionscontrolplanecontroller "github.com/gardener/gardener/extensions/pkg/controller/controlplane"
-	extensionshealthcheckcontroller "github.com/gardener/gardener/extensions/pkg/controller/healthcheck"
-	extensionsinfrastructurecontroller "github.com/gardener/gardener/extensions/pkg/controller/infrastructure"
-	extensionsworkercontroller "github.com/gardener/gardener/extensions/pkg/controller/worker"
-	webhookcmd "github.com/gardener/gardener/extensions/pkg/webhook/cmd"
-	extensioncontrolplanewebhook "github.com/gardener/gardener/extensions/pkg/webhook/controlplane"
-	extensionshootwebhook "github.com/gardener/gardener/extensions/pkg/webhook/shoot"
 )
 
 // ControllerSwitchOptions are the controllercmd.SwitchOptions for the provider controllers.
@@ -40,6 +41,7 @@ func ControllerSwitchOptions() *controllercmd.SwitchOptions {
 		controllercmd.Switch(extensionscontrolplanecontroller.ControllerName, controlplanecontroller.AddToManager),
 		controllercmd.Switch(extensionsworkercontroller.ControllerName, workercontroller.AddToManager),
 		controllercmd.Switch(extensionshealthcheckcontroller.ControllerName, healthcheckcontroller.AddToManager),
+		controllercmd.Switch(extensionsheartbeatcontroller.ControllerName, extensionsheartbeatcontroller.AddToManager),
 	)
 }
 

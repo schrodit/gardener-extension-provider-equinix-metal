@@ -18,7 +18,6 @@ import (
 	"context"
 	"encoding/json"
 
-	api "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/apis/equinixmetal"
 	extensionscontroller "github.com/gardener/gardener/extensions/pkg/controller"
 	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
 	v1beta1constants "github.com/gardener/gardener/pkg/apis/core/v1beta1/constants"
@@ -31,8 +30,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
-	"sigs.k8s.io/controller-runtime/pkg/log"
+	"k8s.io/utils/pointer"
 	"sigs.k8s.io/controller-runtime/pkg/runtime/inject"
+
+	api "github.com/gardener/gardener-extension-provider-equinix-metal/pkg/apis/equinixmetal"
 )
 
 const (
@@ -63,7 +64,7 @@ var _ = Describe("ValuesProvider", func() {
 						Pods: &cidr,
 					},
 					Kubernetes: gardencorev1beta1.Kubernetes{
-						Version: "1.13.4",
+						Version: "1.24.4",
 						VerticalPodAutoscaler: &gardencorev1beta1.VerticalPodAutoscaler{
 							Enabled: true,
 						},
@@ -79,10 +80,9 @@ var _ = Describe("ValuesProvider", func() {
 
 		controlPlaneChartValues = map[string]interface{}{
 			"cloud-provider-equinix-metal": map[string]interface{}{
-				"replicas":          1,
-				"clusterName":       namespace,
-				"kubernetesVersion": "1.13.4",
-				"podNetwork":        cidr,
+				"replicas":    1,
+				"clusterName": namespace,
+				"podNetwork":  cidr,
 				"podAnnotations": map[string]interface{}{
 					"checksum/secret-cloudprovider": "8bafb35ff1ac60275d62e1cbd495aceb511fb354f74a20f7d06ecb48b3a68432",
 				},
@@ -90,8 +90,6 @@ var _ = Describe("ValuesProvider", func() {
 			},
 			"metallb": map[string]interface{}{},
 		}
-
-		logger = log.Log.WithName("test")
 	)
 
 	BeforeEach(func() {
@@ -132,7 +130,7 @@ var _ = Describe("ValuesProvider", func() {
 	Describe("#GetConfigChartValues", func() {
 		It("should return correct config chart values", func() {
 			// Create valuesProvider
-			vp := NewValuesProvider(logger)
+			vp := NewValuesProvider()
 			err := vp.(inject.Scheme).InjectScheme(scheme)
 			Expect(err).NotTo(HaveOccurred())
 
@@ -149,7 +147,7 @@ var _ = Describe("ValuesProvider", func() {
 			client := mockclient.NewMockClient(ctrl)
 
 			// Create valuesProvider
-			vp := NewValuesProvider(logger)
+			vp := NewValuesProvider()
 			err := vp.(inject.Scheme).InjectScheme(scheme)
 			Expect(err).NotTo(HaveOccurred())
 			err = vp.(inject.Client).InjectClient(client)
@@ -163,12 +161,43 @@ var _ = Describe("ValuesProvider", func() {
 	})
 
 	Describe("#GetControlPlaneShootChartValues", func() {
-		It("should return nil", func() {
-			vp := NewValuesProvider(logger)
+		Context("podSecurityPolicy", func() {
+			It("should return correct shoot control plane chart when PodSecurityPolicy admission plugin is not disabled in the shoot", func() {
+				cluster.Shoot.Spec.Kubernetes.KubeAPIServer = &gardencorev1beta1.KubeAPIServerConfig{
+					AdmissionPlugins: []gardencorev1beta1.AdmissionPlugin{
+						{
+							Name: "PodSecurityPolicy",
+						},
+					},
+				}
+				vp := NewValuesProvider()
+				values, err := vp.GetControlPlaneShootChartValues(context.TODO(), cp, cluster, nil, nil)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(values).To(Equal(map[string]interface{}{
+					"metallb": map[string]interface{}{
+						"pspDisabled": false,
+					},
+				}))
+			})
 
-			values, err := vp.GetControlPlaneShootChartValues(context.TODO(), cp, cluster, nil, checksums)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(values).To(BeNil())
+			It("should return correct shoot control plane chart when PodSecurityPolicy admission plugin is disabled in the shoot", func() {
+				cluster.Shoot.Spec.Kubernetes.KubeAPIServer = &gardencorev1beta1.KubeAPIServerConfig{
+					AdmissionPlugins: []gardencorev1beta1.AdmissionPlugin{
+						{
+							Name:     "PodSecurityPolicy",
+							Disabled: pointer.Bool(true),
+						},
+					},
+				}
+				vp := NewValuesProvider()
+				values, err := vp.GetControlPlaneShootChartValues(context.TODO(), cp, cluster, nil, nil)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(values).To(Equal(map[string]interface{}{
+					"metallb": map[string]interface{}{
+						"pspDisabled": true,
+					},
+				}))
+			})
 		})
 	})
 })

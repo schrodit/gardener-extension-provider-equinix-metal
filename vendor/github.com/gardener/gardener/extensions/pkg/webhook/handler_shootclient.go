@@ -30,6 +30,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/runtime/inject"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 
+	extensionsconfig "github.com/gardener/gardener/extensions/pkg/apis/config"
 	"github.com/gardener/gardener/extensions/pkg/util"
 	v1beta1constants "github.com/gardener/gardener/pkg/apis/core/v1beta1/constants"
 )
@@ -51,6 +52,7 @@ func NewHandlerWithShootClient(mgr manager.Manager, types []Type, mutator Mutato
 				mutator:  mutator,
 				logger:   logger.WithName("handlerShootClient"),
 			},
+			RecoverPanic: true,
 		},
 	}, nil
 }
@@ -119,10 +121,10 @@ func (h *handlerShootClient) Handle(ctx context.Context, req admission.Request) 
 		}
 
 		if len(shootNamespace) == 0 {
-			return fmt.Errorf("could not find shoot namespace for webhook request")
+			return fmt.Errorf("could not find shoot namespace for webhook request from remote address %s", remoteAddr)
 		}
 
-		_, shootClient, err := util.NewClientForShoot(ctx, h.client, shootNamespace, client.Options{})
+		_, shootClient, err := util.NewClientForShoot(ctx, h.client, shootNamespace, client.Options{}, extensionsconfig.RESTOptions{})
 		if err != nil {
 			return fmt.Errorf("could not create shoot client: %w", err)
 		}

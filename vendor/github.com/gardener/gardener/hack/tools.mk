@@ -19,12 +19,12 @@
 # as needed. If the required tool (version) is not built/installed yet, make will make sure to build/install it.
 # The *_VERSION variables in this file contain the "default" values, but can be overwritten in the top level make file.
 
-ifeq ($(strip $(shell go list -m)),github.com/gardener/gardener)
+ifeq ($(strip $(shell go list -m 2>/dev/null)),github.com/gardener/gardener)
 TOOLS_PKG_PATH             := ./hack/tools
 else
 # dependency on github.com/gardener/gardener/hack/tools is optional and only needed if other projects want to reuse
-# install-promtool.sh or logcheck. If they don't use it and the project doesn't depend on the package, silence the error
-# to minimize confusion.
+# install-promtool.sh, logcheck, or gomegacheck. If they don't use it and the project doesn't depend on the package,
+# silence the error to minimize confusion.
 TOOLS_PKG_PATH             := $(shell go list -tags tools -f '{{ .Dir }}' github.com/gardener/gardener/hack/tools 2>/dev/null)
 endif
 
@@ -34,11 +34,16 @@ DOCFORGE                   := $(TOOLS_BIN_DIR)/docforge
 GEN_CRD_API_REFERENCE_DOCS := $(TOOLS_BIN_DIR)/gen-crd-api-reference-docs
 GINKGO                     := $(TOOLS_BIN_DIR)/ginkgo
 GOIMPORTS                  := $(TOOLS_BIN_DIR)/goimports
+GOIMPORTSREVISER           := $(TOOLS_BIN_DIR)/goimports-reviser
 GOLANGCI_LINT              := $(TOOLS_BIN_DIR)/golangci-lint
+GOMEGACHECK                := $(TOOLS_BIN_DIR)/gomegacheck.so # plugin binary
+GO_APIDIFF                 := $(TOOLS_BIN_DIR)/go-apidiff
+GO_VULN_CHECK              := $(TOOLS_BIN_DIR)/govulncheck
 GO_TO_PROTOBUF             := $(TOOLS_BIN_DIR)/go-to-protobuf
 HELM                       := $(TOOLS_BIN_DIR)/helm
 IMPORT_BOSS                := $(TOOLS_BIN_DIR)/import-boss
 KIND                       := $(TOOLS_BIN_DIR)/kind
+KUBECTL                    := $(TOOLS_BIN_DIR)/kubectl
 LOGCHECK                   := $(TOOLS_BIN_DIR)/logcheck.so # plugin binary
 MOCKGEN                    := $(TOOLS_BIN_DIR)/mockgen
 OPENAPI_GEN                := $(TOOLS_BIN_DIR)/openapi-gen
@@ -49,16 +54,18 @@ SETUP_ENVTEST              := $(TOOLS_BIN_DIR)/setup-envtest
 SKAFFOLD                   := $(TOOLS_BIN_DIR)/skaffold
 YAML2JSON                  := $(TOOLS_BIN_DIR)/yaml2json
 YQ                         := $(TOOLS_BIN_DIR)/yq
-GO_APIDIFF                 := $(TOOLS_BIN_DIR)/go-apidiff
 
 # default tool versions
-DOCFORGE_VERSION ?= v0.28.0
-GOLANGCI_LINT_VERSION ?= v1.45.2
+DOCFORGE_VERSION ?= v0.33.0
+GOLANGCI_LINT_VERSION ?= v1.51.2
+GO_APIDIFF_VERSION ?= v0.5.0
+GOIMPORTSREVISER_VERSION ?= v3.3.1
+GO_VULN_CHECK_VERSION ?= latest
 HELM_VERSION ?= v3.6.3
 KIND_VERSION ?= v0.14.0
-SKAFFOLD_VERSION ?= v1.35.0
-YQ_VERSION ?= v4.9.6
-GO_APIDIFF_VERSION ?= v0.3.0
+KUBECTL_VERSION ?= v1.24.3
+SKAFFOLD_VERSION ?= v1.39.1
+YQ_VERSION ?= v4.30.4
 
 export TOOLS_BIN_DIR := $(TOOLS_BIN_DIR)
 export PATH := $(abspath $(TOOLS_BIN_DIR)):$(PATH)
@@ -107,10 +114,27 @@ $(GINKGO): go.mod
 $(GOIMPORTS): go.mod
 	go build -o $(GOIMPORTS) golang.org/x/tools/cmd/goimports
 
+$(GOIMPORTSREVISER): $(call tool_version_file,$(GOIMPORTSREVISER),$(GOIMPORTSREVISER_VERSION))
+	GOBIN=$(abspath $(TOOLS_BIN_DIR)) go install github.com/incu6us/goimports-reviser/v3@$(GOIMPORTSREVISER_VERSION)
+
 $(GOLANGCI_LINT): $(call tool_version_file,$(GOLANGCI_LINT),$(GOLANGCI_LINT_VERSION))
 	@# CGO_ENABLED has to be set to 1 in order for golangci-lint to be able to load plugins
 	@# see https://github.com/golangci/golangci-lint/issues/1276
 	GOBIN=$(abspath $(TOOLS_BIN_DIR)) CGO_ENABLED=1 go install github.com/golangci/golangci-lint/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION)
+
+ifeq ($(strip $(shell go list -m 2>/dev/null)),github.com/gardener/gardener)
+$(GOMEGACHECK): $(TOOLS_PKG_PATH)/gomegacheck/go.* $(shell find $(TOOLS_PKG_PATH)/gomegacheck -type f -name '*.go')
+	cd $(TOOLS_PKG_PATH)/gomegacheck; CGO_ENABLED=1 go build -o $(abspath $(GOMEGACHECK)) -buildmode=plugin ./plugin
+else
+$(GOMEGACHECK): go.mod
+	CGO_ENABLED=1 go build -o $(GOMEGACHECK) -buildmode=plugin github.com/gardener/gardener/hack/tools/gomegacheck/plugin
+endif
+
+$(GO_APIDIFF): $(call tool_version_file,$(GO_APIDIFF),$(GO_APIDIFF_VERSION))
+	GOBIN=$(abspath $(TOOLS_BIN_DIR)) go install github.com/joelanford/go-apidiff@$(GO_APIDIFF_VERSION)
+
+$(GO_VULN_CHECK): $(call tool_version_file,$(GO_VULN_CHECK),$(GO_VULN_CHECK_VERSION))
+	GOBIN=$(abspath $(TOOLS_BIN_DIR)) go install golang.org/x/vuln/cmd/govulncheck@$(GO_VULN_CHECK_VERSION)
 
 $(GO_TO_PROTOBUF): go.mod
 	go build -o $(GO_TO_PROTOBUF) k8s.io/code-generator/cmd/go-to-protobuf
@@ -122,10 +146,14 @@ $(IMPORT_BOSS): go.mod
 	go build -o $(IMPORT_BOSS) k8s.io/code-generator/cmd/import-boss
 
 $(KIND): $(call tool_version_file,$(KIND),$(KIND_VERSION))
-	curl -L -o $(KIND) https://kind.sigs.k8s.io/dl/$(KIND_VERSION)/kind-$(shell uname -s | tr '[:upper:]' '[:lower:]')-$(shell uname -m | sed 's/x86_64/amd64/')
+	curl -L -o $(KIND) https://kind.sigs.k8s.io/dl/$(KIND_VERSION)/kind-$(shell uname -s | tr '[:upper:]' '[:lower:]')-$(shell uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
 	chmod +x $(KIND)
 
-ifeq ($(strip $(shell go list -m)),github.com/gardener/gardener)
+$(KUBECTL): $(call tool_version_file,$(KUBECTL),$(KUBECTL_VERSION))
+	curl -Lo $(KUBECTL) https://dl.k8s.io/release/$(KUBECTL_VERSION)/bin/$(shell uname -s | tr '[:upper:]' '[:lower:]')/$(shell uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')/kubectl
+	chmod +x $(KUBECTL)
+
+ifeq ($(strip $(shell go list -m 2>/dev/null)),github.com/gardener/gardener)
 $(LOGCHECK): $(TOOLS_PKG_PATH)/logcheck/go.* $(shell find $(TOOLS_PKG_PATH)/logcheck -type f -name '*.go')
 	cd $(TOOLS_PKG_PATH)/logcheck; CGO_ENABLED=1 go build -o $(abspath $(LOGCHECK)) -buildmode=plugin ./plugin
 else
@@ -145,7 +173,7 @@ $(PROMTOOL): $(TOOLS_PKG_PATH)/install-promtool.sh
 $(PROTOC_GEN_GOGO): go.mod
 	go build -o $(PROTOC_GEN_GOGO) k8s.io/code-generator/cmd/go-to-protobuf/protoc-gen-gogo
 
-ifeq ($(strip $(shell go list -m)),github.com/gardener/gardener)
+ifeq ($(strip $(shell go list -m 2>/dev/null)),github.com/gardener/gardener)
 $(REPORT_COLLECTOR): $(TOOLS_PKG_PATH)/report-collector/*.go
 	go build -o $(REPORT_COLLECTOR) $(TOOLS_PKG_PATH)/report-collector
 else
@@ -157,15 +185,12 @@ $(SETUP_ENVTEST): go.mod
 	go build -o $(SETUP_ENVTEST) sigs.k8s.io/controller-runtime/tools/setup-envtest
 
 $(SKAFFOLD): $(call tool_version_file,$(SKAFFOLD),$(SKAFFOLD_VERSION))
-	curl -Lo $(SKAFFOLD) https://storage.googleapis.com/skaffold/releases/$(SKAFFOLD_VERSION)/skaffold-$(shell uname -s | tr '[:upper:]' '[:lower:]')-$(shell uname -m | sed 's/x86_64/amd64/')
+	curl -Lo $(SKAFFOLD) https://storage.googleapis.com/skaffold/releases/$(SKAFFOLD_VERSION)/skaffold-$(shell uname -s | tr '[:upper:]' '[:lower:]')-$(shell uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
 	chmod +x $(SKAFFOLD)
 
 $(YAML2JSON): go.mod
 	go build -o $(YAML2JSON) github.com/bronze1man/yaml2json
 
 $(YQ): $(call tool_version_file,$(YQ),$(YQ_VERSION))
-	curl -L -o $(YQ) https://github.com/mikefarah/yq/releases/download/$(YQ_VERSION)/yq_$(shell uname -s | tr '[:upper:]' '[:lower:]')_$(shell uname -m | sed 's/x86_64/amd64/')
+	curl -L -o $(YQ) https://github.com/mikefarah/yq/releases/download/$(YQ_VERSION)/yq_$(shell uname -s | tr '[:upper:]' '[:lower:]')_$(shell uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
 	chmod +x $(YQ)
-
-$(GO_APIDIFF): $(call tool_version_file,$(GO_APIDIFF),$(GO_APIDIFF_VERSION))
-	GOBIN=$(abspath $(TOOLS_BIN_DIR)) go install github.com/joelanford/go-apidiff@$(GO_APIDIFF_VERSION)

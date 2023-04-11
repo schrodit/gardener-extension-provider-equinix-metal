@@ -17,33 +17,39 @@ package healthcheck
 import (
 	"time"
 
-	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/equinixmetal"
-
-	genericcontrolplaneactuator "github.com/gardener/gardener/extensions/pkg/controller/controlplane/genericactuator"
+	healthconfig "github.com/gardener/gardener/extensions/pkg/apis/config"
 	"github.com/gardener/gardener/extensions/pkg/controller/healthcheck"
-	healthconfig "github.com/gardener/gardener/extensions/pkg/controller/healthcheck/config"
 	"github.com/gardener/gardener/extensions/pkg/controller/healthcheck/general"
 	"github.com/gardener/gardener/extensions/pkg/controller/healthcheck/worker"
-	genericworkeractuator "github.com/gardener/gardener/extensions/pkg/controller/worker/genericactuator"
 	extensionspredicate "github.com/gardener/gardener/extensions/pkg/predicate"
 	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
 	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/utils/pointer"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
+
+	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/equinixmetal"
 )
 
 var (
 	defaultSyncPeriod = time.Second * 30
 	// DefaultAddOptions are the default DefaultAddArgs for AddToManager.
 	DefaultAddOptions = healthcheck.DefaultAddArgs{
-		HealthCheckConfig: healthconfig.HealthCheckConfig{SyncPeriod: metav1.Duration{Duration: defaultSyncPeriod}},
+		HealthCheckConfig: healthconfig.HealthCheckConfig{
+			SyncPeriod: metav1.Duration{Duration: defaultSyncPeriod},
+			ShootRESTOptions: &healthconfig.RESTOptions{
+				QPS:   pointer.Float32(100),
+				Burst: pointer.Int(130),
+			},
+		},
 	}
 )
 
 // RegisterHealthChecks registers health checks for each extension resource
-// HealthChecks are grouped by extension (e.g worker), extension.type (e.g aws) and  Health Check Type (e.g SystemComponentsHealthy)
+// HealthChecks are grouped by extension (e.g worker), extension.type (e.g aws) and  Health Check Type (e.g ShootControlPlaneHealthy)
 func RegisterHealthChecks(mgr manager.Manager, opts healthcheck.DefaultAddArgs) error {
 	if err := healthcheck.DefaultRegistration(
 		equinixmetal.Type,
@@ -58,15 +64,10 @@ func RegisterHealthChecks(mgr manager.Manager, opts healthcheck.DefaultAddArgs) 
 				ConditionType: string(gardencorev1beta1.ShootControlPlaneHealthy),
 				HealthCheck:   general.NewSeedDeploymentHealthChecker(equinixmetal.CloudControllerManagerName),
 			},
-			{
-				ConditionType: string(gardencorev1beta1.ShootSystemComponentsHealthy),
-				HealthCheck:   general.CheckManagedResource(genericcontrolplaneactuator.ControlPlaneShootChartResourceName),
-			},
-			{
-				ConditionType: string(gardencorev1beta1.ShootSystemComponentsHealthy),
-				HealthCheck:   general.CheckManagedResource(genericcontrolplaneactuator.StorageClassesChartResourceName),
-			},
-		}); err != nil {
+		},
+		// TODO(acumino): Remove this condition in a future release.
+		sets.New[gardencorev1beta1.ConditionType](gardencorev1beta1.ShootSystemComponentsHealthy),
+	); err != nil {
 		return err
 	}
 
@@ -80,10 +81,6 @@ func RegisterHealthChecks(mgr manager.Manager, opts healthcheck.DefaultAddArgs) 
 		nil,
 		[]healthcheck.ConditionTypeToHealthCheck{
 			{
-				ConditionType: string(gardencorev1beta1.ShootSystemComponentsHealthy),
-				HealthCheck:   general.CheckManagedResource(genericworkeractuator.McmShootResourceName),
-			},
-			{
 				ConditionType: string(gardencorev1beta1.ShootControlPlaneHealthy),
 				HealthCheck:   general.NewSeedDeploymentHealthChecker(equinixmetal.MachineControllerManagerName),
 			},
@@ -91,7 +88,10 @@ func RegisterHealthChecks(mgr manager.Manager, opts healthcheck.DefaultAddArgs) 
 				ConditionType: string(gardencorev1beta1.ShootEveryNodeReady),
 				HealthCheck:   worker.NewNodesChecker(),
 			},
-		})
+		},
+		// TODO(acumino): Remove this condition in a future release.
+		sets.New[gardencorev1beta1.ConditionType](gardencorev1beta1.ShootSystemComponentsHealthy),
+	)
 }
 
 // AddToManager adds a controller with the default Options.

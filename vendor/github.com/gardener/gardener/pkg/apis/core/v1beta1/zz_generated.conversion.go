@@ -202,6 +202,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddGeneratedConversionFunc((*CARotation)(nil), (*core.CARotation)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_CARotation_To_core_CARotation(a.(*CARotation), b.(*core.CARotation), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.CARotation)(nil), (*CARotation)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_CARotation_To_v1beta1_CARotation(a.(*core.CARotation), b.(*CARotation), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddGeneratedConversionFunc((*CRI)(nil), (*core.CRI)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1beta1_CRI_To_core_CRI(a.(*CRI), b.(*core.CRI), scope)
 	}); err != nil {
@@ -209,16 +219,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*core.CRI)(nil), (*CRI)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_core_CRI_To_v1beta1_CRI(a.(*core.CRI), b.(*CRI), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*CloudInfo)(nil), (*core.CloudInfo)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1beta1_CloudInfo_To_core_CloudInfo(a.(*CloudInfo), b.(*core.CloudInfo), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*core.CloudInfo)(nil), (*CloudInfo)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_core_CloudInfo_To_v1beta1_CloudInfo(a.(*core.CloudInfo), b.(*CloudInfo), scope)
 	}); err != nil {
 		return err
 	}
@@ -262,16 +262,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*ClusterInfo)(nil), (*core.ClusterInfo)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1beta1_ClusterInfo_To_core_ClusterInfo(a.(*ClusterInfo), b.(*core.ClusterInfo), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*core.ClusterInfo)(nil), (*ClusterInfo)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_core_ClusterInfo_To_v1beta1_ClusterInfo(a.(*core.ClusterInfo), b.(*ClusterInfo), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*Condition)(nil), (*core.Condition)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1beta1_Condition_To_core_Condition(a.(*Condition), b.(*core.Condition), scope)
 	}); err != nil {
@@ -289,6 +279,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*core.ContainerRuntime)(nil), (*ContainerRuntime)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_core_ContainerRuntime_To_v1beta1_ContainerRuntime(a.(*core.ContainerRuntime), b.(*ContainerRuntime), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*ControlPlane)(nil), (*core.ControlPlane)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_ControlPlane_To_core_ControlPlane(a.(*ControlPlane), b.(*core.ControlPlane), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.ControlPlane)(nil), (*ControlPlane)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_ControlPlane_To_v1beta1_ControlPlane(a.(*core.ControlPlane), b.(*ControlPlane), scope)
 	}); err != nil {
 		return err
 	}
@@ -402,6 +402,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddGeneratedConversionFunc((*ControllerResourceLifecycle)(nil), (*core.ControllerResourceLifecycle)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_ControllerResourceLifecycle_To_core_ControllerResourceLifecycle(a.(*ControllerResourceLifecycle), b.(*core.ControllerResourceLifecycle), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.ControllerResourceLifecycle)(nil), (*ControllerResourceLifecycle)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_ControllerResourceLifecycle_To_v1beta1_ControllerResourceLifecycle(a.(*core.ControllerResourceLifecycle), b.(*ControllerResourceLifecycle), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddGeneratedConversionFunc((*CoreDNS)(nil), (*core.CoreDNS)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1beta1_CoreDNS_To_core_CoreDNS(a.(*CoreDNS), b.(*core.CoreDNS), scope)
 	}); err != nil {
@@ -419,6 +429,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*core.CoreDNSAutoscaling)(nil), (*CoreDNSAutoscaling)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_core_CoreDNSAutoscaling_To_v1beta1_CoreDNSAutoscaling(a.(*core.CoreDNSAutoscaling), b.(*CoreDNSAutoscaling), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*CoreDNSRewriting)(nil), (*core.CoreDNSRewriting)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_CoreDNSRewriting_To_core_CoreDNSRewriting(a.(*CoreDNSRewriting), b.(*core.CoreDNSRewriting), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.CoreDNSRewriting)(nil), (*CoreDNSRewriting)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_CoreDNSRewriting_To_v1beta1_CoreDNSRewriting(a.(*core.CoreDNSRewriting), b.(*CoreDNSRewriting), scope)
 	}); err != nil {
 		return err
 	}
@@ -472,13 +492,13 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*Endpoint)(nil), (*core.Endpoint)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1beta1_Endpoint_To_core_Endpoint(a.(*Endpoint), b.(*core.Endpoint), scope)
+	if err := s.AddGeneratedConversionFunc((*ETCDEncryptionKeyRotation)(nil), (*core.ETCDEncryptionKeyRotation)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_ETCDEncryptionKeyRotation_To_core_ETCDEncryptionKeyRotation(a.(*ETCDEncryptionKeyRotation), b.(*core.ETCDEncryptionKeyRotation), scope)
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*core.Endpoint)(nil), (*Endpoint)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_core_Endpoint_To_v1beta1_Endpoint(a.(*core.Endpoint), b.(*Endpoint), scope)
+	if err := s.AddGeneratedConversionFunc((*core.ETCDEncryptionKeyRotation)(nil), (*ETCDEncryptionKeyRotation)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_ETCDEncryptionKeyRotation_To_v1beta1_ETCDEncryptionKeyRotation(a.(*core.ETCDEncryptionKeyRotation), b.(*ETCDEncryptionKeyRotation), scope)
 	}); err != nil {
 		return err
 	}
@@ -492,6 +512,36 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddGeneratedConversionFunc((*ExposureClass)(nil), (*core.ExposureClass)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_ExposureClass_To_core_ExposureClass(a.(*ExposureClass), b.(*core.ExposureClass), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.ExposureClass)(nil), (*ExposureClass)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_ExposureClass_To_v1beta1_ExposureClass(a.(*core.ExposureClass), b.(*ExposureClass), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*ExposureClassList)(nil), (*core.ExposureClassList)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_ExposureClassList_To_core_ExposureClassList(a.(*ExposureClassList), b.(*core.ExposureClassList), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.ExposureClassList)(nil), (*ExposureClassList)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_ExposureClassList_To_v1beta1_ExposureClassList(a.(*core.ExposureClassList), b.(*ExposureClassList), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*ExposureClassScheduling)(nil), (*core.ExposureClassScheduling)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_ExposureClassScheduling_To_core_ExposureClassScheduling(a.(*ExposureClassScheduling), b.(*core.ExposureClassScheduling), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.ExposureClassScheduling)(nil), (*ExposureClassScheduling)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_ExposureClassScheduling_To_v1beta1_ExposureClassScheduling(a.(*core.ExposureClassScheduling), b.(*ExposureClassScheduling), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddGeneratedConversionFunc((*Extension)(nil), (*core.Extension)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1beta1_Extension_To_core_Extension(a.(*Extension), b.(*core.Extension), scope)
 	}); err != nil {
@@ -502,6 +552,26 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddGeneratedConversionFunc((*ExtensionResourceState)(nil), (*core.ExtensionResourceState)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_ExtensionResourceState_To_core_ExtensionResourceState(a.(*ExtensionResourceState), b.(*core.ExtensionResourceState), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.ExtensionResourceState)(nil), (*ExtensionResourceState)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_ExtensionResourceState_To_v1beta1_ExtensionResourceState(a.(*core.ExtensionResourceState), b.(*ExtensionResourceState), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*FailureTolerance)(nil), (*core.FailureTolerance)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_FailureTolerance_To_core_FailureTolerance(a.(*FailureTolerance), b.(*core.FailureTolerance), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.FailureTolerance)(nil), (*FailureTolerance)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_FailureTolerance_To_v1beta1_FailureTolerance(a.(*core.FailureTolerance), b.(*FailureTolerance), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddGeneratedConversionFunc((*Gardener)(nil), (*core.Gardener)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1beta1_Gardener_To_core_Gardener(a.(*Gardener), b.(*core.Gardener), scope)
 	}); err != nil {
@@ -509,6 +579,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*core.Gardener)(nil), (*Gardener)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_core_Gardener_To_v1beta1_Gardener(a.(*core.Gardener), b.(*Gardener), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*GardenerResourceData)(nil), (*core.GardenerResourceData)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_GardenerResourceData_To_core_GardenerResourceData(a.(*GardenerResourceData), b.(*core.GardenerResourceData), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.GardenerResourceData)(nil), (*GardenerResourceData)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_GardenerResourceData_To_v1beta1_GardenerResourceData(a.(*core.GardenerResourceData), b.(*GardenerResourceData), scope)
 	}); err != nil {
 		return err
 	}
@@ -529,6 +609,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*core.HibernationSchedule)(nil), (*HibernationSchedule)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_core_HibernationSchedule_To_v1beta1_HibernationSchedule(a.(*core.HibernationSchedule), b.(*HibernationSchedule), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*HighAvailability)(nil), (*core.HighAvailability)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_HighAvailability_To_core_HighAvailability(a.(*HighAvailability), b.(*core.HighAvailability), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.HighAvailability)(nil), (*HighAvailability)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_HighAvailability_To_v1beta1_HighAvailability(a.(*core.HighAvailability), b.(*HighAvailability), scope)
 	}); err != nil {
 		return err
 	}
@@ -569,6 +659,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*core.KubeAPIServerConfig)(nil), (*KubeAPIServerConfig)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_core_KubeAPIServerConfig_To_v1beta1_KubeAPIServerConfig(a.(*core.KubeAPIServerConfig), b.(*KubeAPIServerConfig), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*KubeAPIServerLogging)(nil), (*core.KubeAPIServerLogging)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_KubeAPIServerLogging_To_core_KubeAPIServerLogging(a.(*KubeAPIServerLogging), b.(*core.KubeAPIServerLogging), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.KubeAPIServerLogging)(nil), (*KubeAPIServerLogging)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_KubeAPIServerLogging_To_v1beta1_KubeAPIServerLogging(a.(*core.KubeAPIServerLogging), b.(*KubeAPIServerLogging), scope)
 	}); err != nil {
 		return err
 	}
@@ -692,16 +792,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*KubernetesInfo)(nil), (*core.KubernetesInfo)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1beta1_KubernetesInfo_To_core_KubernetesInfo(a.(*KubernetesInfo), b.(*core.KubernetesInfo), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*core.KubernetesInfo)(nil), (*KubernetesInfo)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_core_KubernetesInfo_To_v1beta1_KubernetesInfo(a.(*core.KubernetesInfo), b.(*KubernetesInfo), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*KubernetesSettings)(nil), (*core.KubernetesSettings)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1beta1_KubernetesSettings_To_core_KubernetesSettings(a.(*KubernetesSettings), b.(*core.KubernetesSettings), scope)
 	}); err != nil {
@@ -719,6 +809,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*core.LastError)(nil), (*LastError)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_core_LastError_To_v1beta1_LastError(a.(*core.LastError), b.(*LastError), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LastMaintenance)(nil), (*core.LastMaintenance)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_LastMaintenance_To_core_LastMaintenance(a.(*LastMaintenance), b.(*core.LastMaintenance), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.LastMaintenance)(nil), (*LastMaintenance)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_LastMaintenance_To_v1beta1_LastMaintenance(a.(*core.LastMaintenance), b.(*LastMaintenance), scope)
 	}); err != nil {
 		return err
 	}
@@ -862,6 +962,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddGeneratedConversionFunc((*NodeLocalDNS)(nil), (*core.NodeLocalDNS)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_NodeLocalDNS_To_core_NodeLocalDNS(a.(*NodeLocalDNS), b.(*core.NodeLocalDNS), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.NodeLocalDNS)(nil), (*NodeLocalDNS)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_NodeLocalDNS_To_v1beta1_NodeLocalDNS(a.(*core.NodeLocalDNS), b.(*NodeLocalDNS), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddGeneratedConversionFunc((*OIDCConfig)(nil), (*core.OIDCConfig)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1beta1_OIDCConfig_To_core_OIDCConfig(a.(*OIDCConfig), b.(*core.OIDCConfig), scope)
 	}); err != nil {
@@ -879,46 +989,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*core.OpenIDConnectClientAuthentication)(nil), (*OpenIDConnectClientAuthentication)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_core_OpenIDConnectClientAuthentication_To_v1beta1_OpenIDConnectClientAuthentication(a.(*core.OpenIDConnectClientAuthentication), b.(*OpenIDConnectClientAuthentication), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*Plant)(nil), (*core.Plant)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1beta1_Plant_To_core_Plant(a.(*Plant), b.(*core.Plant), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*core.Plant)(nil), (*Plant)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_core_Plant_To_v1beta1_Plant(a.(*core.Plant), b.(*Plant), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*PlantList)(nil), (*core.PlantList)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1beta1_PlantList_To_core_PlantList(a.(*PlantList), b.(*core.PlantList), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*core.PlantList)(nil), (*PlantList)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_core_PlantList_To_v1beta1_PlantList(a.(*core.PlantList), b.(*PlantList), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*PlantSpec)(nil), (*core.PlantSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1beta1_PlantSpec_To_core_PlantSpec(a.(*PlantSpec), b.(*core.PlantSpec), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*core.PlantSpec)(nil), (*PlantSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_core_PlantSpec_To_v1beta1_PlantSpec(a.(*core.PlantSpec), b.(*PlantSpec), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*PlantStatus)(nil), (*core.PlantStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1beta1_PlantStatus_To_core_PlantStatus(a.(*PlantStatus), b.(*core.PlantStatus), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*core.PlantStatus)(nil), (*PlantStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_core_PlantStatus_To_v1beta1_PlantStatus(a.(*core.PlantStatus), b.(*PlantStatus), scope)
 	}); err != nil {
 		return err
 	}
@@ -1012,6 +1082,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddGeneratedConversionFunc((*ResourceData)(nil), (*core.ResourceData)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_ResourceData_To_core_ResourceData(a.(*ResourceData), b.(*core.ResourceData), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.ResourceData)(nil), (*ResourceData)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_ResourceData_To_v1beta1_ResourceData(a.(*core.ResourceData), b.(*ResourceData), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddGeneratedConversionFunc((*ResourceWatchCacheSize)(nil), (*core.ResourceWatchCacheSize)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1beta1_ResourceWatchCacheSize_To_core_ResourceWatchCacheSize(a.(*ResourceWatchCacheSize), b.(*core.ResourceWatchCacheSize), scope)
 	}); err != nil {
@@ -1019,6 +1099,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*core.ResourceWatchCacheSize)(nil), (*ResourceWatchCacheSize)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_core_ResourceWatchCacheSize_To_v1beta1_ResourceWatchCacheSize(a.(*core.ResourceWatchCacheSize), b.(*ResourceWatchCacheSize), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*SSHAccess)(nil), (*core.SSHAccess)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_SSHAccess_To_core_SSHAccess(a.(*SSHAccess), b.(*core.SSHAccess), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.SSHAccess)(nil), (*SSHAccess)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_SSHAccess_To_v1beta1_SSHAccess(a.(*core.SSHAccess), b.(*SSHAccess), scope)
 	}); err != nil {
 		return err
 	}
@@ -1182,6 +1272,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddGeneratedConversionFunc((*SeedSettingLoadBalancerServicesZones)(nil), (*core.SeedSettingLoadBalancerServicesZones)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_SeedSettingLoadBalancerServicesZones_To_core_SeedSettingLoadBalancerServicesZones(a.(*SeedSettingLoadBalancerServicesZones), b.(*core.SeedSettingLoadBalancerServicesZones), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.SeedSettingLoadBalancerServicesZones)(nil), (*SeedSettingLoadBalancerServicesZones)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_SeedSettingLoadBalancerServicesZones_To_v1beta1_SeedSettingLoadBalancerServicesZones(a.(*core.SeedSettingLoadBalancerServicesZones), b.(*SeedSettingLoadBalancerServicesZones), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddGeneratedConversionFunc((*SeedSettingOwnerChecks)(nil), (*core.SeedSettingOwnerChecks)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1beta1_SeedSettingOwnerChecks_To_core_SeedSettingOwnerChecks(a.(*SeedSettingOwnerChecks), b.(*core.SeedSettingOwnerChecks), scope)
 	}); err != nil {
@@ -1202,13 +1302,13 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*SeedSettingShootDNS)(nil), (*core.SeedSettingShootDNS)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1beta1_SeedSettingShootDNS_To_core_SeedSettingShootDNS(a.(*SeedSettingShootDNS), b.(*core.SeedSettingShootDNS), scope)
+	if err := s.AddGeneratedConversionFunc((*SeedSettingTopologyAwareRouting)(nil), (*core.SeedSettingTopologyAwareRouting)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_SeedSettingTopologyAwareRouting_To_core_SeedSettingTopologyAwareRouting(a.(*SeedSettingTopologyAwareRouting), b.(*core.SeedSettingTopologyAwareRouting), scope)
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*core.SeedSettingShootDNS)(nil), (*SeedSettingShootDNS)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_core_SeedSettingShootDNS_To_v1beta1_SeedSettingShootDNS(a.(*core.SeedSettingShootDNS), b.(*SeedSettingShootDNS), scope)
+	if err := s.AddGeneratedConversionFunc((*core.SeedSettingTopologyAwareRouting)(nil), (*SeedSettingTopologyAwareRouting)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_SeedSettingTopologyAwareRouting_To_v1beta1_SeedSettingTopologyAwareRouting(a.(*core.SeedSettingTopologyAwareRouting), b.(*SeedSettingTopologyAwareRouting), scope)
 	}); err != nil {
 		return err
 	}
@@ -1302,6 +1402,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddGeneratedConversionFunc((*ServiceAccountKeyRotation)(nil), (*core.ServiceAccountKeyRotation)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_ServiceAccountKeyRotation_To_core_ServiceAccountKeyRotation(a.(*ServiceAccountKeyRotation), b.(*core.ServiceAccountKeyRotation), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.ServiceAccountKeyRotation)(nil), (*ServiceAccountKeyRotation)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_ServiceAccountKeyRotation_To_v1beta1_ServiceAccountKeyRotation(a.(*core.ServiceAccountKeyRotation), b.(*ServiceAccountKeyRotation), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddGeneratedConversionFunc((*Shoot)(nil), (*core.Shoot)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1beta1_Shoot_To_core_Shoot(a.(*Shoot), b.(*core.Shoot), scope)
 	}); err != nil {
@@ -1322,16 +1432,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*ShootCARotation)(nil), (*core.ShootCARotation)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1beta1_ShootCARotation_To_core_ShootCARotation(a.(*ShootCARotation), b.(*core.ShootCARotation), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*core.ShootCARotation)(nil), (*ShootCARotation)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_core_ShootCARotation_To_v1beta1_ShootCARotation(a.(*core.ShootCARotation), b.(*ShootCARotation), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*ShootCredentials)(nil), (*core.ShootCredentials)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1beta1_ShootCredentials_To_core_ShootCredentials(a.(*ShootCredentials), b.(*core.ShootCredentials), scope)
 	}); err != nil {
@@ -1349,16 +1449,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*core.ShootCredentialsRotation)(nil), (*ShootCredentialsRotation)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_core_ShootCredentialsRotation_To_v1beta1_ShootCredentialsRotation(a.(*core.ShootCredentialsRotation), b.(*ShootCredentialsRotation), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*ShootETCDEncryptionKeyRotation)(nil), (*core.ShootETCDEncryptionKeyRotation)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1beta1_ShootETCDEncryptionKeyRotation_To_core_ShootETCDEncryptionKeyRotation(a.(*ShootETCDEncryptionKeyRotation), b.(*core.ShootETCDEncryptionKeyRotation), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*core.ShootETCDEncryptionKeyRotation)(nil), (*ShootETCDEncryptionKeyRotation)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_core_ShootETCDEncryptionKeyRotation_To_v1beta1_ShootETCDEncryptionKeyRotation(a.(*core.ShootETCDEncryptionKeyRotation), b.(*ShootETCDEncryptionKeyRotation), scope)
 	}); err != nil {
 		return err
 	}
@@ -1422,16 +1512,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*ShootServiceAccountKeyRotation)(nil), (*core.ShootServiceAccountKeyRotation)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1beta1_ShootServiceAccountKeyRotation_To_core_ShootServiceAccountKeyRotation(a.(*ShootServiceAccountKeyRotation), b.(*core.ShootServiceAccountKeyRotation), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*core.ShootServiceAccountKeyRotation)(nil), (*ShootServiceAccountKeyRotation)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_core_ShootServiceAccountKeyRotation_To_v1beta1_ShootServiceAccountKeyRotation(a.(*core.ShootServiceAccountKeyRotation), b.(*ShootServiceAccountKeyRotation), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*ShootSpec)(nil), (*core.ShootSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1beta1_ShootSpec_To_core_ShootSpec(a.(*ShootSpec), b.(*core.ShootSpec), scope)
 	}); err != nil {
@@ -1439,6 +1519,36 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*core.ShootSpec)(nil), (*ShootSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_core_ShootSpec_To_v1beta1_ShootSpec(a.(*core.ShootSpec), b.(*ShootSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*ShootState)(nil), (*core.ShootState)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_ShootState_To_core_ShootState(a.(*ShootState), b.(*core.ShootState), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.ShootState)(nil), (*ShootState)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_ShootState_To_v1beta1_ShootState(a.(*core.ShootState), b.(*ShootState), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*ShootStateList)(nil), (*core.ShootStateList)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_ShootStateList_To_core_ShootStateList(a.(*ShootStateList), b.(*core.ShootStateList), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.ShootStateList)(nil), (*ShootStateList)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_ShootStateList_To_v1beta1_ShootStateList(a.(*core.ShootStateList), b.(*ShootStateList), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*ShootStateSpec)(nil), (*core.ShootStateSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_ShootStateSpec_To_core_ShootStateSpec(a.(*ShootStateSpec), b.(*core.ShootStateSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.ShootStateSpec)(nil), (*ShootStateSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_ShootStateSpec_To_v1beta1_ShootStateSpec(a.(*core.ShootStateSpec), b.(*ShootStateSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -1552,6 +1662,16 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddGeneratedConversionFunc((*WorkersSettings)(nil), (*core.WorkersSettings)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1beta1_WorkersSettings_To_core_WorkersSettings(a.(*WorkersSettings), b.(*core.WorkersSettings), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*core.WorkersSettings)(nil), (*WorkersSettings)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_core_WorkersSettings_To_v1beta1_WorkersSettings(a.(*core.WorkersSettings), b.(*WorkersSettings), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*core.ProjectMember)(nil), (*ProjectMember)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_core_ProjectMember_To_v1beta1_ProjectMember(a.(*core.ProjectMember), b.(*ProjectMember), scope)
 	}); err != nil {
@@ -1620,6 +1740,7 @@ func Convert_core_Addons_To_v1beta1_Addons(in *core.Addons, out *Addons, s conve
 func autoConvert_v1beta1_AdmissionPlugin_To_core_AdmissionPlugin(in *AdmissionPlugin, out *core.AdmissionPlugin, s conversion.Scope) error {
 	out.Name = in.Name
 	out.Config = (*runtime.RawExtension)(unsafe.Pointer(in.Config))
+	out.Disabled = (*bool)(unsafe.Pointer(in.Disabled))
 	return nil
 }
 
@@ -1630,6 +1751,7 @@ func Convert_v1beta1_AdmissionPlugin_To_core_AdmissionPlugin(in *AdmissionPlugin
 
 func autoConvert_core_AdmissionPlugin_To_v1beta1_AdmissionPlugin(in *core.AdmissionPlugin, out *AdmissionPlugin, s conversion.Scope) error {
 	out.Name = in.Name
+	out.Disabled = (*bool)(unsafe.Pointer(in.Disabled))
 	out.Config = (*runtime.RawExtension)(unsafe.Pointer(in.Config))
 	return nil
 }
@@ -1961,6 +2083,34 @@ func Convert_core_BackupEntryStatus_To_v1beta1_BackupEntryStatus(in *core.Backup
 	return autoConvert_core_BackupEntryStatus_To_v1beta1_BackupEntryStatus(in, out, s)
 }
 
+func autoConvert_v1beta1_CARotation_To_core_CARotation(in *CARotation, out *core.CARotation, s conversion.Scope) error {
+	out.Phase = core.CredentialsRotationPhase(in.Phase)
+	out.LastCompletionTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTime))
+	out.LastInitiationTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationTime))
+	out.LastInitiationFinishedTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationFinishedTime))
+	out.LastCompletionTriggeredTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTriggeredTime))
+	return nil
+}
+
+// Convert_v1beta1_CARotation_To_core_CARotation is an autogenerated conversion function.
+func Convert_v1beta1_CARotation_To_core_CARotation(in *CARotation, out *core.CARotation, s conversion.Scope) error {
+	return autoConvert_v1beta1_CARotation_To_core_CARotation(in, out, s)
+}
+
+func autoConvert_core_CARotation_To_v1beta1_CARotation(in *core.CARotation, out *CARotation, s conversion.Scope) error {
+	out.Phase = CredentialsRotationPhase(in.Phase)
+	out.LastInitiationTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationTime))
+	out.LastInitiationFinishedTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationFinishedTime))
+	out.LastCompletionTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTime))
+	out.LastCompletionTriggeredTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTriggeredTime))
+	return nil
+}
+
+// Convert_core_CARotation_To_v1beta1_CARotation is an autogenerated conversion function.
+func Convert_core_CARotation_To_v1beta1_CARotation(in *core.CARotation, out *CARotation, s conversion.Scope) error {
+	return autoConvert_core_CARotation_To_v1beta1_CARotation(in, out, s)
+}
+
 func autoConvert_v1beta1_CRI_To_core_CRI(in *CRI, out *core.CRI, s conversion.Scope) error {
 	out.Name = core.CRIName(in.Name)
 	out.ContainerRuntimes = *(*[]core.ContainerRuntime)(unsafe.Pointer(&in.ContainerRuntimes))
@@ -1981,28 +2131,6 @@ func autoConvert_core_CRI_To_v1beta1_CRI(in *core.CRI, out *CRI, s conversion.Sc
 // Convert_core_CRI_To_v1beta1_CRI is an autogenerated conversion function.
 func Convert_core_CRI_To_v1beta1_CRI(in *core.CRI, out *CRI, s conversion.Scope) error {
 	return autoConvert_core_CRI_To_v1beta1_CRI(in, out, s)
-}
-
-func autoConvert_v1beta1_CloudInfo_To_core_CloudInfo(in *CloudInfo, out *core.CloudInfo, s conversion.Scope) error {
-	out.Type = in.Type
-	out.Region = in.Region
-	return nil
-}
-
-// Convert_v1beta1_CloudInfo_To_core_CloudInfo is an autogenerated conversion function.
-func Convert_v1beta1_CloudInfo_To_core_CloudInfo(in *CloudInfo, out *core.CloudInfo, s conversion.Scope) error {
-	return autoConvert_v1beta1_CloudInfo_To_core_CloudInfo(in, out, s)
-}
-
-func autoConvert_core_CloudInfo_To_v1beta1_CloudInfo(in *core.CloudInfo, out *CloudInfo, s conversion.Scope) error {
-	out.Type = in.Type
-	out.Region = in.Region
-	return nil
-}
-
-// Convert_core_CloudInfo_To_v1beta1_CloudInfo is an autogenerated conversion function.
-func Convert_core_CloudInfo_To_v1beta1_CloudInfo(in *core.CloudInfo, out *CloudInfo, s conversion.Scope) error {
-	return autoConvert_core_CloudInfo_To_v1beta1_CloudInfo(in, out, s)
 }
 
 func autoConvert_v1beta1_CloudProfile_To_core_CloudProfile(in *CloudProfile, out *core.CloudProfile, s conversion.Scope) error {
@@ -2131,36 +2259,6 @@ func Convert_core_ClusterAutoscaler_To_v1beta1_ClusterAutoscaler(in *core.Cluste
 	return autoConvert_core_ClusterAutoscaler_To_v1beta1_ClusterAutoscaler(in, out, s)
 }
 
-func autoConvert_v1beta1_ClusterInfo_To_core_ClusterInfo(in *ClusterInfo, out *core.ClusterInfo, s conversion.Scope) error {
-	if err := Convert_v1beta1_CloudInfo_To_core_CloudInfo(&in.Cloud, &out.Cloud, s); err != nil {
-		return err
-	}
-	if err := Convert_v1beta1_KubernetesInfo_To_core_KubernetesInfo(&in.Kubernetes, &out.Kubernetes, s); err != nil {
-		return err
-	}
-	return nil
-}
-
-// Convert_v1beta1_ClusterInfo_To_core_ClusterInfo is an autogenerated conversion function.
-func Convert_v1beta1_ClusterInfo_To_core_ClusterInfo(in *ClusterInfo, out *core.ClusterInfo, s conversion.Scope) error {
-	return autoConvert_v1beta1_ClusterInfo_To_core_ClusterInfo(in, out, s)
-}
-
-func autoConvert_core_ClusterInfo_To_v1beta1_ClusterInfo(in *core.ClusterInfo, out *ClusterInfo, s conversion.Scope) error {
-	if err := Convert_core_CloudInfo_To_v1beta1_CloudInfo(&in.Cloud, &out.Cloud, s); err != nil {
-		return err
-	}
-	if err := Convert_core_KubernetesInfo_To_v1beta1_KubernetesInfo(&in.Kubernetes, &out.Kubernetes, s); err != nil {
-		return err
-	}
-	return nil
-}
-
-// Convert_core_ClusterInfo_To_v1beta1_ClusterInfo is an autogenerated conversion function.
-func Convert_core_ClusterInfo_To_v1beta1_ClusterInfo(in *core.ClusterInfo, out *ClusterInfo, s conversion.Scope) error {
-	return autoConvert_core_ClusterInfo_To_v1beta1_ClusterInfo(in, out, s)
-}
-
 func autoConvert_v1beta1_Condition_To_core_Condition(in *Condition, out *core.Condition, s conversion.Scope) error {
 	out.Type = core.ConditionType(in.Type)
 	out.Status = core.ConditionStatus(in.Status)
@@ -2213,6 +2311,26 @@ func autoConvert_core_ContainerRuntime_To_v1beta1_ContainerRuntime(in *core.Cont
 // Convert_core_ContainerRuntime_To_v1beta1_ContainerRuntime is an autogenerated conversion function.
 func Convert_core_ContainerRuntime_To_v1beta1_ContainerRuntime(in *core.ContainerRuntime, out *ContainerRuntime, s conversion.Scope) error {
 	return autoConvert_core_ContainerRuntime_To_v1beta1_ContainerRuntime(in, out, s)
+}
+
+func autoConvert_v1beta1_ControlPlane_To_core_ControlPlane(in *ControlPlane, out *core.ControlPlane, s conversion.Scope) error {
+	out.HighAvailability = (*core.HighAvailability)(unsafe.Pointer(in.HighAvailability))
+	return nil
+}
+
+// Convert_v1beta1_ControlPlane_To_core_ControlPlane is an autogenerated conversion function.
+func Convert_v1beta1_ControlPlane_To_core_ControlPlane(in *ControlPlane, out *core.ControlPlane, s conversion.Scope) error {
+	return autoConvert_v1beta1_ControlPlane_To_core_ControlPlane(in, out, s)
+}
+
+func autoConvert_core_ControlPlane_To_v1beta1_ControlPlane(in *core.ControlPlane, out *ControlPlane, s conversion.Scope) error {
+	out.HighAvailability = (*HighAvailability)(unsafe.Pointer(in.HighAvailability))
+	return nil
+}
+
+// Convert_core_ControlPlane_To_v1beta1_ControlPlane is an autogenerated conversion function.
+func Convert_core_ControlPlane_To_v1beta1_ControlPlane(in *core.ControlPlane, out *ControlPlane, s conversion.Scope) error {
+	return autoConvert_core_ControlPlane_To_v1beta1_ControlPlane(in, out, s)
 }
 
 func autoConvert_v1beta1_ControllerDeployment_To_core_ControllerDeployment(in *ControllerDeployment, out *core.ControllerDeployment, s conversion.Scope) error {
@@ -2485,6 +2603,7 @@ func autoConvert_v1beta1_ControllerResource_To_core_ControllerResource(in *Contr
 	out.GloballyEnabled = (*bool)(unsafe.Pointer(in.GloballyEnabled))
 	out.ReconcileTimeout = (*metav1.Duration)(unsafe.Pointer(in.ReconcileTimeout))
 	out.Primary = (*bool)(unsafe.Pointer(in.Primary))
+	out.Lifecycle = (*core.ControllerResourceLifecycle)(unsafe.Pointer(in.Lifecycle))
 	return nil
 }
 
@@ -2499,6 +2618,7 @@ func autoConvert_core_ControllerResource_To_v1beta1_ControllerResource(in *core.
 	out.GloballyEnabled = (*bool)(unsafe.Pointer(in.GloballyEnabled))
 	out.ReconcileTimeout = (*metav1.Duration)(unsafe.Pointer(in.ReconcileTimeout))
 	out.Primary = (*bool)(unsafe.Pointer(in.Primary))
+	out.Lifecycle = (*ControllerResourceLifecycle)(unsafe.Pointer(in.Lifecycle))
 	return nil
 }
 
@@ -2507,8 +2627,33 @@ func Convert_core_ControllerResource_To_v1beta1_ControllerResource(in *core.Cont
 	return autoConvert_core_ControllerResource_To_v1beta1_ControllerResource(in, out, s)
 }
 
+func autoConvert_v1beta1_ControllerResourceLifecycle_To_core_ControllerResourceLifecycle(in *ControllerResourceLifecycle, out *core.ControllerResourceLifecycle, s conversion.Scope) error {
+	out.Reconcile = (*core.ControllerResourceLifecycleStrategy)(unsafe.Pointer(in.Reconcile))
+	out.Delete = (*core.ControllerResourceLifecycleStrategy)(unsafe.Pointer(in.Delete))
+	out.Migrate = (*core.ControllerResourceLifecycleStrategy)(unsafe.Pointer(in.Migrate))
+	return nil
+}
+
+// Convert_v1beta1_ControllerResourceLifecycle_To_core_ControllerResourceLifecycle is an autogenerated conversion function.
+func Convert_v1beta1_ControllerResourceLifecycle_To_core_ControllerResourceLifecycle(in *ControllerResourceLifecycle, out *core.ControllerResourceLifecycle, s conversion.Scope) error {
+	return autoConvert_v1beta1_ControllerResourceLifecycle_To_core_ControllerResourceLifecycle(in, out, s)
+}
+
+func autoConvert_core_ControllerResourceLifecycle_To_v1beta1_ControllerResourceLifecycle(in *core.ControllerResourceLifecycle, out *ControllerResourceLifecycle, s conversion.Scope) error {
+	out.Reconcile = (*ControllerResourceLifecycleStrategy)(unsafe.Pointer(in.Reconcile))
+	out.Delete = (*ControllerResourceLifecycleStrategy)(unsafe.Pointer(in.Delete))
+	out.Migrate = (*ControllerResourceLifecycleStrategy)(unsafe.Pointer(in.Migrate))
+	return nil
+}
+
+// Convert_core_ControllerResourceLifecycle_To_v1beta1_ControllerResourceLifecycle is an autogenerated conversion function.
+func Convert_core_ControllerResourceLifecycle_To_v1beta1_ControllerResourceLifecycle(in *core.ControllerResourceLifecycle, out *ControllerResourceLifecycle, s conversion.Scope) error {
+	return autoConvert_core_ControllerResourceLifecycle_To_v1beta1_ControllerResourceLifecycle(in, out, s)
+}
+
 func autoConvert_v1beta1_CoreDNS_To_core_CoreDNS(in *CoreDNS, out *core.CoreDNS, s conversion.Scope) error {
 	out.Autoscaling = (*core.CoreDNSAutoscaling)(unsafe.Pointer(in.Autoscaling))
+	out.Rewriting = (*core.CoreDNSRewriting)(unsafe.Pointer(in.Rewriting))
 	return nil
 }
 
@@ -2519,6 +2664,7 @@ func Convert_v1beta1_CoreDNS_To_core_CoreDNS(in *CoreDNS, out *core.CoreDNS, s c
 
 func autoConvert_core_CoreDNS_To_v1beta1_CoreDNS(in *core.CoreDNS, out *CoreDNS, s conversion.Scope) error {
 	out.Autoscaling = (*CoreDNSAutoscaling)(unsafe.Pointer(in.Autoscaling))
+	out.Rewriting = (*CoreDNSRewriting)(unsafe.Pointer(in.Rewriting))
 	return nil
 }
 
@@ -2545,6 +2691,26 @@ func autoConvert_core_CoreDNSAutoscaling_To_v1beta1_CoreDNSAutoscaling(in *core.
 // Convert_core_CoreDNSAutoscaling_To_v1beta1_CoreDNSAutoscaling is an autogenerated conversion function.
 func Convert_core_CoreDNSAutoscaling_To_v1beta1_CoreDNSAutoscaling(in *core.CoreDNSAutoscaling, out *CoreDNSAutoscaling, s conversion.Scope) error {
 	return autoConvert_core_CoreDNSAutoscaling_To_v1beta1_CoreDNSAutoscaling(in, out, s)
+}
+
+func autoConvert_v1beta1_CoreDNSRewriting_To_core_CoreDNSRewriting(in *CoreDNSRewriting, out *core.CoreDNSRewriting, s conversion.Scope) error {
+	out.CommonSuffixes = *(*[]string)(unsafe.Pointer(&in.CommonSuffixes))
+	return nil
+}
+
+// Convert_v1beta1_CoreDNSRewriting_To_core_CoreDNSRewriting is an autogenerated conversion function.
+func Convert_v1beta1_CoreDNSRewriting_To_core_CoreDNSRewriting(in *CoreDNSRewriting, out *core.CoreDNSRewriting, s conversion.Scope) error {
+	return autoConvert_v1beta1_CoreDNSRewriting_To_core_CoreDNSRewriting(in, out, s)
+}
+
+func autoConvert_core_CoreDNSRewriting_To_v1beta1_CoreDNSRewriting(in *core.CoreDNSRewriting, out *CoreDNSRewriting, s conversion.Scope) error {
+	out.CommonSuffixes = *(*[]string)(unsafe.Pointer(&in.CommonSuffixes))
+	return nil
+}
+
+// Convert_core_CoreDNSRewriting_To_v1beta1_CoreDNSRewriting is an autogenerated conversion function.
+func Convert_core_CoreDNSRewriting_To_v1beta1_CoreDNSRewriting(in *core.CoreDNSRewriting, out *CoreDNSRewriting, s conversion.Scope) error {
+	return autoConvert_core_CoreDNSRewriting_To_v1beta1_CoreDNSRewriting(in, out, s)
 }
 
 func autoConvert_v1beta1_DNS_To_core_DNS(in *DNS, out *core.DNS, s conversion.Scope) error {
@@ -2665,28 +2831,32 @@ func Convert_core_DeploymentRef_To_v1beta1_DeploymentRef(in *core.DeploymentRef,
 	return autoConvert_core_DeploymentRef_To_v1beta1_DeploymentRef(in, out, s)
 }
 
-func autoConvert_v1beta1_Endpoint_To_core_Endpoint(in *Endpoint, out *core.Endpoint, s conversion.Scope) error {
-	out.Name = in.Name
-	out.URL = in.URL
-	out.Purpose = in.Purpose
+func autoConvert_v1beta1_ETCDEncryptionKeyRotation_To_core_ETCDEncryptionKeyRotation(in *ETCDEncryptionKeyRotation, out *core.ETCDEncryptionKeyRotation, s conversion.Scope) error {
+	out.Phase = core.CredentialsRotationPhase(in.Phase)
+	out.LastCompletionTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTime))
+	out.LastInitiationTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationTime))
+	out.LastInitiationFinishedTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationFinishedTime))
+	out.LastCompletionTriggeredTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTriggeredTime))
 	return nil
 }
 
-// Convert_v1beta1_Endpoint_To_core_Endpoint is an autogenerated conversion function.
-func Convert_v1beta1_Endpoint_To_core_Endpoint(in *Endpoint, out *core.Endpoint, s conversion.Scope) error {
-	return autoConvert_v1beta1_Endpoint_To_core_Endpoint(in, out, s)
+// Convert_v1beta1_ETCDEncryptionKeyRotation_To_core_ETCDEncryptionKeyRotation is an autogenerated conversion function.
+func Convert_v1beta1_ETCDEncryptionKeyRotation_To_core_ETCDEncryptionKeyRotation(in *ETCDEncryptionKeyRotation, out *core.ETCDEncryptionKeyRotation, s conversion.Scope) error {
+	return autoConvert_v1beta1_ETCDEncryptionKeyRotation_To_core_ETCDEncryptionKeyRotation(in, out, s)
 }
 
-func autoConvert_core_Endpoint_To_v1beta1_Endpoint(in *core.Endpoint, out *Endpoint, s conversion.Scope) error {
-	out.Name = in.Name
-	out.URL = in.URL
-	out.Purpose = in.Purpose
+func autoConvert_core_ETCDEncryptionKeyRotation_To_v1beta1_ETCDEncryptionKeyRotation(in *core.ETCDEncryptionKeyRotation, out *ETCDEncryptionKeyRotation, s conversion.Scope) error {
+	out.Phase = CredentialsRotationPhase(in.Phase)
+	out.LastInitiationTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationTime))
+	out.LastInitiationFinishedTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationFinishedTime))
+	out.LastCompletionTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTime))
+	out.LastCompletionTriggeredTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTriggeredTime))
 	return nil
 }
 
-// Convert_core_Endpoint_To_v1beta1_Endpoint is an autogenerated conversion function.
-func Convert_core_Endpoint_To_v1beta1_Endpoint(in *core.Endpoint, out *Endpoint, s conversion.Scope) error {
-	return autoConvert_core_Endpoint_To_v1beta1_Endpoint(in, out, s)
+// Convert_core_ETCDEncryptionKeyRotation_To_v1beta1_ETCDEncryptionKeyRotation is an autogenerated conversion function.
+func Convert_core_ETCDEncryptionKeyRotation_To_v1beta1_ETCDEncryptionKeyRotation(in *core.ETCDEncryptionKeyRotation, out *ETCDEncryptionKeyRotation, s conversion.Scope) error {
+	return autoConvert_core_ETCDEncryptionKeyRotation_To_v1beta1_ETCDEncryptionKeyRotation(in, out, s)
 }
 
 func autoConvert_v1beta1_ExpirableVersion_To_core_ExpirableVersion(in *ExpirableVersion, out *core.ExpirableVersion, s conversion.Scope) error {
@@ -2713,6 +2883,74 @@ func Convert_core_ExpirableVersion_To_v1beta1_ExpirableVersion(in *core.Expirabl
 	return autoConvert_core_ExpirableVersion_To_v1beta1_ExpirableVersion(in, out, s)
 }
 
+func autoConvert_v1beta1_ExposureClass_To_core_ExposureClass(in *ExposureClass, out *core.ExposureClass, s conversion.Scope) error {
+	out.ObjectMeta = in.ObjectMeta
+	out.Handler = in.Handler
+	out.Scheduling = (*core.ExposureClassScheduling)(unsafe.Pointer(in.Scheduling))
+	return nil
+}
+
+// Convert_v1beta1_ExposureClass_To_core_ExposureClass is an autogenerated conversion function.
+func Convert_v1beta1_ExposureClass_To_core_ExposureClass(in *ExposureClass, out *core.ExposureClass, s conversion.Scope) error {
+	return autoConvert_v1beta1_ExposureClass_To_core_ExposureClass(in, out, s)
+}
+
+func autoConvert_core_ExposureClass_To_v1beta1_ExposureClass(in *core.ExposureClass, out *ExposureClass, s conversion.Scope) error {
+	out.ObjectMeta = in.ObjectMeta
+	out.Handler = in.Handler
+	out.Scheduling = (*ExposureClassScheduling)(unsafe.Pointer(in.Scheduling))
+	return nil
+}
+
+// Convert_core_ExposureClass_To_v1beta1_ExposureClass is an autogenerated conversion function.
+func Convert_core_ExposureClass_To_v1beta1_ExposureClass(in *core.ExposureClass, out *ExposureClass, s conversion.Scope) error {
+	return autoConvert_core_ExposureClass_To_v1beta1_ExposureClass(in, out, s)
+}
+
+func autoConvert_v1beta1_ExposureClassList_To_core_ExposureClassList(in *ExposureClassList, out *core.ExposureClassList, s conversion.Scope) error {
+	out.ListMeta = in.ListMeta
+	out.Items = *(*[]core.ExposureClass)(unsafe.Pointer(&in.Items))
+	return nil
+}
+
+// Convert_v1beta1_ExposureClassList_To_core_ExposureClassList is an autogenerated conversion function.
+func Convert_v1beta1_ExposureClassList_To_core_ExposureClassList(in *ExposureClassList, out *core.ExposureClassList, s conversion.Scope) error {
+	return autoConvert_v1beta1_ExposureClassList_To_core_ExposureClassList(in, out, s)
+}
+
+func autoConvert_core_ExposureClassList_To_v1beta1_ExposureClassList(in *core.ExposureClassList, out *ExposureClassList, s conversion.Scope) error {
+	out.ListMeta = in.ListMeta
+	out.Items = *(*[]ExposureClass)(unsafe.Pointer(&in.Items))
+	return nil
+}
+
+// Convert_core_ExposureClassList_To_v1beta1_ExposureClassList is an autogenerated conversion function.
+func Convert_core_ExposureClassList_To_v1beta1_ExposureClassList(in *core.ExposureClassList, out *ExposureClassList, s conversion.Scope) error {
+	return autoConvert_core_ExposureClassList_To_v1beta1_ExposureClassList(in, out, s)
+}
+
+func autoConvert_v1beta1_ExposureClassScheduling_To_core_ExposureClassScheduling(in *ExposureClassScheduling, out *core.ExposureClassScheduling, s conversion.Scope) error {
+	out.SeedSelector = (*core.SeedSelector)(unsafe.Pointer(in.SeedSelector))
+	out.Tolerations = *(*[]core.Toleration)(unsafe.Pointer(&in.Tolerations))
+	return nil
+}
+
+// Convert_v1beta1_ExposureClassScheduling_To_core_ExposureClassScheduling is an autogenerated conversion function.
+func Convert_v1beta1_ExposureClassScheduling_To_core_ExposureClassScheduling(in *ExposureClassScheduling, out *core.ExposureClassScheduling, s conversion.Scope) error {
+	return autoConvert_v1beta1_ExposureClassScheduling_To_core_ExposureClassScheduling(in, out, s)
+}
+
+func autoConvert_core_ExposureClassScheduling_To_v1beta1_ExposureClassScheduling(in *core.ExposureClassScheduling, out *ExposureClassScheduling, s conversion.Scope) error {
+	out.SeedSelector = (*SeedSelector)(unsafe.Pointer(in.SeedSelector))
+	out.Tolerations = *(*[]Toleration)(unsafe.Pointer(&in.Tolerations))
+	return nil
+}
+
+// Convert_core_ExposureClassScheduling_To_v1beta1_ExposureClassScheduling is an autogenerated conversion function.
+func Convert_core_ExposureClassScheduling_To_v1beta1_ExposureClassScheduling(in *core.ExposureClassScheduling, out *ExposureClassScheduling, s conversion.Scope) error {
+	return autoConvert_core_ExposureClassScheduling_To_v1beta1_ExposureClassScheduling(in, out, s)
+}
+
 func autoConvert_v1beta1_Extension_To_core_Extension(in *Extension, out *core.Extension, s conversion.Scope) error {
 	out.Type = in.Type
 	out.ProviderConfig = (*runtime.RawExtension)(unsafe.Pointer(in.ProviderConfig))
@@ -2737,6 +2975,54 @@ func Convert_core_Extension_To_v1beta1_Extension(in *core.Extension, out *Extens
 	return autoConvert_core_Extension_To_v1beta1_Extension(in, out, s)
 }
 
+func autoConvert_v1beta1_ExtensionResourceState_To_core_ExtensionResourceState(in *ExtensionResourceState, out *core.ExtensionResourceState, s conversion.Scope) error {
+	out.Kind = in.Kind
+	out.Name = (*string)(unsafe.Pointer(in.Name))
+	out.Purpose = (*string)(unsafe.Pointer(in.Purpose))
+	out.State = (*runtime.RawExtension)(unsafe.Pointer(in.State))
+	out.Resources = *(*[]core.NamedResourceReference)(unsafe.Pointer(&in.Resources))
+	return nil
+}
+
+// Convert_v1beta1_ExtensionResourceState_To_core_ExtensionResourceState is an autogenerated conversion function.
+func Convert_v1beta1_ExtensionResourceState_To_core_ExtensionResourceState(in *ExtensionResourceState, out *core.ExtensionResourceState, s conversion.Scope) error {
+	return autoConvert_v1beta1_ExtensionResourceState_To_core_ExtensionResourceState(in, out, s)
+}
+
+func autoConvert_core_ExtensionResourceState_To_v1beta1_ExtensionResourceState(in *core.ExtensionResourceState, out *ExtensionResourceState, s conversion.Scope) error {
+	out.Kind = in.Kind
+	out.Name = (*string)(unsafe.Pointer(in.Name))
+	out.Purpose = (*string)(unsafe.Pointer(in.Purpose))
+	out.State = (*runtime.RawExtension)(unsafe.Pointer(in.State))
+	out.Resources = *(*[]NamedResourceReference)(unsafe.Pointer(&in.Resources))
+	return nil
+}
+
+// Convert_core_ExtensionResourceState_To_v1beta1_ExtensionResourceState is an autogenerated conversion function.
+func Convert_core_ExtensionResourceState_To_v1beta1_ExtensionResourceState(in *core.ExtensionResourceState, out *ExtensionResourceState, s conversion.Scope) error {
+	return autoConvert_core_ExtensionResourceState_To_v1beta1_ExtensionResourceState(in, out, s)
+}
+
+func autoConvert_v1beta1_FailureTolerance_To_core_FailureTolerance(in *FailureTolerance, out *core.FailureTolerance, s conversion.Scope) error {
+	out.Type = core.FailureToleranceType(in.Type)
+	return nil
+}
+
+// Convert_v1beta1_FailureTolerance_To_core_FailureTolerance is an autogenerated conversion function.
+func Convert_v1beta1_FailureTolerance_To_core_FailureTolerance(in *FailureTolerance, out *core.FailureTolerance, s conversion.Scope) error {
+	return autoConvert_v1beta1_FailureTolerance_To_core_FailureTolerance(in, out, s)
+}
+
+func autoConvert_core_FailureTolerance_To_v1beta1_FailureTolerance(in *core.FailureTolerance, out *FailureTolerance, s conversion.Scope) error {
+	out.Type = FailureToleranceType(in.Type)
+	return nil
+}
+
+// Convert_core_FailureTolerance_To_v1beta1_FailureTolerance is an autogenerated conversion function.
+func Convert_core_FailureTolerance_To_v1beta1_FailureTolerance(in *core.FailureTolerance, out *FailureTolerance, s conversion.Scope) error {
+	return autoConvert_core_FailureTolerance_To_v1beta1_FailureTolerance(in, out, s)
+}
+
 func autoConvert_v1beta1_Gardener_To_core_Gardener(in *Gardener, out *core.Gardener, s conversion.Scope) error {
 	out.ID = in.ID
 	out.Name = in.Name
@@ -2759,6 +3045,32 @@ func autoConvert_core_Gardener_To_v1beta1_Gardener(in *core.Gardener, out *Garde
 // Convert_core_Gardener_To_v1beta1_Gardener is an autogenerated conversion function.
 func Convert_core_Gardener_To_v1beta1_Gardener(in *core.Gardener, out *Gardener, s conversion.Scope) error {
 	return autoConvert_core_Gardener_To_v1beta1_Gardener(in, out, s)
+}
+
+func autoConvert_v1beta1_GardenerResourceData_To_core_GardenerResourceData(in *GardenerResourceData, out *core.GardenerResourceData, s conversion.Scope) error {
+	out.Name = in.Name
+	out.Type = in.Type
+	out.Data = in.Data
+	out.Labels = *(*map[string]string)(unsafe.Pointer(&in.Labels))
+	return nil
+}
+
+// Convert_v1beta1_GardenerResourceData_To_core_GardenerResourceData is an autogenerated conversion function.
+func Convert_v1beta1_GardenerResourceData_To_core_GardenerResourceData(in *GardenerResourceData, out *core.GardenerResourceData, s conversion.Scope) error {
+	return autoConvert_v1beta1_GardenerResourceData_To_core_GardenerResourceData(in, out, s)
+}
+
+func autoConvert_core_GardenerResourceData_To_v1beta1_GardenerResourceData(in *core.GardenerResourceData, out *GardenerResourceData, s conversion.Scope) error {
+	out.Name = in.Name
+	out.Type = in.Type
+	out.Data = in.Data
+	out.Labels = *(*map[string]string)(unsafe.Pointer(&in.Labels))
+	return nil
+}
+
+// Convert_core_GardenerResourceData_To_v1beta1_GardenerResourceData is an autogenerated conversion function.
+func Convert_core_GardenerResourceData_To_v1beta1_GardenerResourceData(in *core.GardenerResourceData, out *GardenerResourceData, s conversion.Scope) error {
+	return autoConvert_core_GardenerResourceData_To_v1beta1_GardenerResourceData(in, out, s)
 }
 
 func autoConvert_v1beta1_Hibernation_To_core_Hibernation(in *Hibernation, out *core.Hibernation, s conversion.Scope) error {
@@ -2805,6 +3117,30 @@ func autoConvert_core_HibernationSchedule_To_v1beta1_HibernationSchedule(in *cor
 // Convert_core_HibernationSchedule_To_v1beta1_HibernationSchedule is an autogenerated conversion function.
 func Convert_core_HibernationSchedule_To_v1beta1_HibernationSchedule(in *core.HibernationSchedule, out *HibernationSchedule, s conversion.Scope) error {
 	return autoConvert_core_HibernationSchedule_To_v1beta1_HibernationSchedule(in, out, s)
+}
+
+func autoConvert_v1beta1_HighAvailability_To_core_HighAvailability(in *HighAvailability, out *core.HighAvailability, s conversion.Scope) error {
+	if err := Convert_v1beta1_FailureTolerance_To_core_FailureTolerance(&in.FailureTolerance, &out.FailureTolerance, s); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Convert_v1beta1_HighAvailability_To_core_HighAvailability is an autogenerated conversion function.
+func Convert_v1beta1_HighAvailability_To_core_HighAvailability(in *HighAvailability, out *core.HighAvailability, s conversion.Scope) error {
+	return autoConvert_v1beta1_HighAvailability_To_core_HighAvailability(in, out, s)
+}
+
+func autoConvert_core_HighAvailability_To_v1beta1_HighAvailability(in *core.HighAvailability, out *HighAvailability, s conversion.Scope) error {
+	if err := Convert_core_FailureTolerance_To_v1beta1_FailureTolerance(&in.FailureTolerance, &out.FailureTolerance, s); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Convert_core_HighAvailability_To_v1beta1_HighAvailability is an autogenerated conversion function.
+func Convert_core_HighAvailability_To_v1beta1_HighAvailability(in *core.HighAvailability, out *HighAvailability, s conversion.Scope) error {
+	return autoConvert_core_HighAvailability_To_v1beta1_HighAvailability(in, out, s)
 }
 
 func autoConvert_v1beta1_HorizontalPodAutoscalerConfig_To_core_HorizontalPodAutoscalerConfig(in *HorizontalPodAutoscalerConfig, out *core.HorizontalPodAutoscalerConfig, s conversion.Scope) error {
@@ -2887,7 +3223,17 @@ func autoConvert_v1beta1_KubeAPIServerConfig_To_core_KubeAPIServerConfig(in *Kub
 	if err := Convert_v1beta1_KubernetesConfig_To_core_KubernetesConfig(&in.KubernetesConfig, &out.KubernetesConfig, s); err != nil {
 		return err
 	}
-	out.AdmissionPlugins = *(*[]core.AdmissionPlugin)(unsafe.Pointer(&in.AdmissionPlugins))
+	if in.AdmissionPlugins != nil {
+		in, out := &in.AdmissionPlugins, &out.AdmissionPlugins
+		*out = make([]core.AdmissionPlugin, len(*in))
+		for i := range *in {
+			if err := Convert_v1beta1_AdmissionPlugin_To_core_AdmissionPlugin(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.AdmissionPlugins = nil
+	}
 	out.APIAudiences = *(*[]string)(unsafe.Pointer(&in.APIAudiences))
 	out.AuditConfig = (*core.AuditConfig)(unsafe.Pointer(in.AuditConfig))
 	out.EnableBasicAuthentication = (*bool)(unsafe.Pointer(in.EnableBasicAuthentication))
@@ -2898,6 +3244,9 @@ func autoConvert_v1beta1_KubeAPIServerConfig_To_core_KubeAPIServerConfig(in *Kub
 	out.Requests = (*core.KubeAPIServerRequests)(unsafe.Pointer(in.Requests))
 	out.EnableAnonymousAuthentication = (*bool)(unsafe.Pointer(in.EnableAnonymousAuthentication))
 	out.EventTTL = (*metav1.Duration)(unsafe.Pointer(in.EventTTL))
+	out.Logging = (*core.KubeAPIServerLogging)(unsafe.Pointer(in.Logging))
+	out.DefaultNotReadyTolerationSeconds = (*int64)(unsafe.Pointer(in.DefaultNotReadyTolerationSeconds))
+	out.DefaultUnreachableTolerationSeconds = (*int64)(unsafe.Pointer(in.DefaultUnreachableTolerationSeconds))
 	return nil
 }
 
@@ -2910,7 +3259,17 @@ func autoConvert_core_KubeAPIServerConfig_To_v1beta1_KubeAPIServerConfig(in *cor
 	if err := Convert_core_KubernetesConfig_To_v1beta1_KubernetesConfig(&in.KubernetesConfig, &out.KubernetesConfig, s); err != nil {
 		return err
 	}
-	out.AdmissionPlugins = *(*[]AdmissionPlugin)(unsafe.Pointer(&in.AdmissionPlugins))
+	if in.AdmissionPlugins != nil {
+		in, out := &in.AdmissionPlugins, &out.AdmissionPlugins
+		*out = make([]AdmissionPlugin, len(*in))
+		for i := range *in {
+			if err := Convert_core_AdmissionPlugin_To_v1beta1_AdmissionPlugin(&(*in)[i], &(*out)[i], s); err != nil {
+				return err
+			}
+		}
+	} else {
+		out.AdmissionPlugins = nil
+	}
 	out.APIAudiences = *(*[]string)(unsafe.Pointer(&in.APIAudiences))
 	out.AuditConfig = (*AuditConfig)(unsafe.Pointer(in.AuditConfig))
 	out.EnableBasicAuthentication = (*bool)(unsafe.Pointer(in.EnableBasicAuthentication))
@@ -2921,12 +3280,37 @@ func autoConvert_core_KubeAPIServerConfig_To_v1beta1_KubeAPIServerConfig(in *cor
 	out.Requests = (*KubeAPIServerRequests)(unsafe.Pointer(in.Requests))
 	out.EnableAnonymousAuthentication = (*bool)(unsafe.Pointer(in.EnableAnonymousAuthentication))
 	out.EventTTL = (*metav1.Duration)(unsafe.Pointer(in.EventTTL))
+	out.Logging = (*KubeAPIServerLogging)(unsafe.Pointer(in.Logging))
+	out.DefaultNotReadyTolerationSeconds = (*int64)(unsafe.Pointer(in.DefaultNotReadyTolerationSeconds))
+	out.DefaultUnreachableTolerationSeconds = (*int64)(unsafe.Pointer(in.DefaultUnreachableTolerationSeconds))
 	return nil
 }
 
 // Convert_core_KubeAPIServerConfig_To_v1beta1_KubeAPIServerConfig is an autogenerated conversion function.
 func Convert_core_KubeAPIServerConfig_To_v1beta1_KubeAPIServerConfig(in *core.KubeAPIServerConfig, out *KubeAPIServerConfig, s conversion.Scope) error {
 	return autoConvert_core_KubeAPIServerConfig_To_v1beta1_KubeAPIServerConfig(in, out, s)
+}
+
+func autoConvert_v1beta1_KubeAPIServerLogging_To_core_KubeAPIServerLogging(in *KubeAPIServerLogging, out *core.KubeAPIServerLogging, s conversion.Scope) error {
+	out.Verbosity = (*int32)(unsafe.Pointer(in.Verbosity))
+	out.HTTPAccessVerbosity = (*int32)(unsafe.Pointer(in.HTTPAccessVerbosity))
+	return nil
+}
+
+// Convert_v1beta1_KubeAPIServerLogging_To_core_KubeAPIServerLogging is an autogenerated conversion function.
+func Convert_v1beta1_KubeAPIServerLogging_To_core_KubeAPIServerLogging(in *KubeAPIServerLogging, out *core.KubeAPIServerLogging, s conversion.Scope) error {
+	return autoConvert_v1beta1_KubeAPIServerLogging_To_core_KubeAPIServerLogging(in, out, s)
+}
+
+func autoConvert_core_KubeAPIServerLogging_To_v1beta1_KubeAPIServerLogging(in *core.KubeAPIServerLogging, out *KubeAPIServerLogging, s conversion.Scope) error {
+	out.Verbosity = (*int32)(unsafe.Pointer(in.Verbosity))
+	out.HTTPAccessVerbosity = (*int32)(unsafe.Pointer(in.HTTPAccessVerbosity))
+	return nil
+}
+
+// Convert_core_KubeAPIServerLogging_To_v1beta1_KubeAPIServerLogging is an autogenerated conversion function.
+func Convert_core_KubeAPIServerLogging_To_v1beta1_KubeAPIServerLogging(in *core.KubeAPIServerLogging, out *KubeAPIServerLogging, s conversion.Scope) error {
+	return autoConvert_core_KubeAPIServerLogging_To_v1beta1_KubeAPIServerLogging(in, out, s)
 }
 
 func autoConvert_v1beta1_KubeAPIServerRequests_To_core_KubeAPIServerRequests(in *KubeAPIServerRequests, out *core.KubeAPIServerRequests, s conversion.Scope) error {
@@ -3016,6 +3400,7 @@ func autoConvert_v1beta1_KubeSchedulerConfig_To_core_KubeSchedulerConfig(in *Kub
 		return err
 	}
 	out.KubeMaxPDVols = (*string)(unsafe.Pointer(in.KubeMaxPDVols))
+	out.Profile = (*core.SchedulingProfile)(unsafe.Pointer(in.Profile))
 	return nil
 }
 
@@ -3029,6 +3414,7 @@ func autoConvert_core_KubeSchedulerConfig_To_v1beta1_KubeSchedulerConfig(in *cor
 		return err
 	}
 	out.KubeMaxPDVols = (*string)(unsafe.Pointer(in.KubeMaxPDVols))
+	out.Profile = (*SchedulingProfile)(unsafe.Pointer(in.Profile))
 	return nil
 }
 
@@ -3058,6 +3444,13 @@ func autoConvert_v1beta1_KubeletConfig_To_core_KubeletConfig(in *KubeletConfig, 
 	out.ImageGCHighThresholdPercent = (*int32)(unsafe.Pointer(in.ImageGCHighThresholdPercent))
 	out.ImageGCLowThresholdPercent = (*int32)(unsafe.Pointer(in.ImageGCLowThresholdPercent))
 	out.SerializeImagePulls = (*bool)(unsafe.Pointer(in.SerializeImagePulls))
+	out.RegistryPullQPS = (*int32)(unsafe.Pointer(in.RegistryPullQPS))
+	out.RegistryBurst = (*int32)(unsafe.Pointer(in.RegistryBurst))
+	out.SeccompDefault = (*bool)(unsafe.Pointer(in.SeccompDefault))
+	out.ContainerLogMaxSize = (*resource.Quantity)(unsafe.Pointer(in.ContainerLogMaxSize))
+	out.ContainerLogMaxFiles = (*int32)(unsafe.Pointer(in.ContainerLogMaxFiles))
+	out.ProtectKernelDefaults = (*bool)(unsafe.Pointer(in.ProtectKernelDefaults))
+	out.StreamingConnectionIdleTimeout = (*metav1.Duration)(unsafe.Pointer(in.StreamingConnectionIdleTimeout))
 	return nil
 }
 
@@ -3070,6 +3463,8 @@ func autoConvert_core_KubeletConfig_To_v1beta1_KubeletConfig(in *core.KubeletCon
 	if err := Convert_core_KubernetesConfig_To_v1beta1_KubernetesConfig(&in.KubernetesConfig, &out.KubernetesConfig, s); err != nil {
 		return err
 	}
+	out.ContainerLogMaxSize = (*resource.Quantity)(unsafe.Pointer(in.ContainerLogMaxSize))
+	out.ContainerLogMaxFiles = (*int32)(unsafe.Pointer(in.ContainerLogMaxFiles))
 	out.CPUCFSQuota = (*bool)(unsafe.Pointer(in.CPUCFSQuota))
 	out.CPUManagerPolicy = (*string)(unsafe.Pointer(in.CPUManagerPolicy))
 	out.EvictionHard = (*KubeletConfigEviction)(unsafe.Pointer(in.EvictionHard))
@@ -3087,6 +3482,11 @@ func autoConvert_core_KubeletConfig_To_v1beta1_KubeletConfig(in *core.KubeletCon
 	out.ImageGCHighThresholdPercent = (*int32)(unsafe.Pointer(in.ImageGCHighThresholdPercent))
 	out.ImageGCLowThresholdPercent = (*int32)(unsafe.Pointer(in.ImageGCLowThresholdPercent))
 	out.SerializeImagePulls = (*bool)(unsafe.Pointer(in.SerializeImagePulls))
+	out.RegistryPullQPS = (*int32)(unsafe.Pointer(in.RegistryPullQPS))
+	out.RegistryBurst = (*int32)(unsafe.Pointer(in.RegistryBurst))
+	out.SeccompDefault = (*bool)(unsafe.Pointer(in.SeccompDefault))
+	out.ProtectKernelDefaults = (*bool)(unsafe.Pointer(in.ProtectKernelDefaults))
+	out.StreamingConnectionIdleTimeout = (*metav1.Duration)(unsafe.Pointer(in.StreamingConnectionIdleTimeout))
 	return nil
 }
 
@@ -3208,11 +3608,27 @@ func Convert_core_KubeletConfigReserved_To_v1beta1_KubeletConfigReserved(in *cor
 func autoConvert_v1beta1_Kubernetes_To_core_Kubernetes(in *Kubernetes, out *core.Kubernetes, s conversion.Scope) error {
 	out.AllowPrivilegedContainers = (*bool)(unsafe.Pointer(in.AllowPrivilegedContainers))
 	out.ClusterAutoscaler = (*core.ClusterAutoscaler)(unsafe.Pointer(in.ClusterAutoscaler))
-	out.KubeAPIServer = (*core.KubeAPIServerConfig)(unsafe.Pointer(in.KubeAPIServer))
+	if in.KubeAPIServer != nil {
+		in, out := &in.KubeAPIServer, &out.KubeAPIServer
+		*out = new(core.KubeAPIServerConfig)
+		if err := Convert_v1beta1_KubeAPIServerConfig_To_core_KubeAPIServerConfig(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.KubeAPIServer = nil
+	}
 	out.KubeControllerManager = (*core.KubeControllerManagerConfig)(unsafe.Pointer(in.KubeControllerManager))
 	out.KubeScheduler = (*core.KubeSchedulerConfig)(unsafe.Pointer(in.KubeScheduler))
 	out.KubeProxy = (*core.KubeProxyConfig)(unsafe.Pointer(in.KubeProxy))
-	out.Kubelet = (*core.KubeletConfig)(unsafe.Pointer(in.Kubelet))
+	if in.Kubelet != nil {
+		in, out := &in.Kubelet, &out.Kubelet
+		*out = new(core.KubeletConfig)
+		if err := Convert_v1beta1_KubeletConfig_To_core_KubeletConfig(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Kubelet = nil
+	}
 	out.Version = in.Version
 	out.VerticalPodAutoscaler = (*core.VerticalPodAutoscaler)(unsafe.Pointer(in.VerticalPodAutoscaler))
 	out.EnableStaticTokenKubeconfig = (*bool)(unsafe.Pointer(in.EnableStaticTokenKubeconfig))
@@ -3227,11 +3643,27 @@ func Convert_v1beta1_Kubernetes_To_core_Kubernetes(in *Kubernetes, out *core.Kub
 func autoConvert_core_Kubernetes_To_v1beta1_Kubernetes(in *core.Kubernetes, out *Kubernetes, s conversion.Scope) error {
 	out.AllowPrivilegedContainers = (*bool)(unsafe.Pointer(in.AllowPrivilegedContainers))
 	out.ClusterAutoscaler = (*ClusterAutoscaler)(unsafe.Pointer(in.ClusterAutoscaler))
-	out.KubeAPIServer = (*KubeAPIServerConfig)(unsafe.Pointer(in.KubeAPIServer))
+	if in.KubeAPIServer != nil {
+		in, out := &in.KubeAPIServer, &out.KubeAPIServer
+		*out = new(KubeAPIServerConfig)
+		if err := Convert_core_KubeAPIServerConfig_To_v1beta1_KubeAPIServerConfig(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.KubeAPIServer = nil
+	}
 	out.KubeControllerManager = (*KubeControllerManagerConfig)(unsafe.Pointer(in.KubeControllerManager))
 	out.KubeScheduler = (*KubeSchedulerConfig)(unsafe.Pointer(in.KubeScheduler))
 	out.KubeProxy = (*KubeProxyConfig)(unsafe.Pointer(in.KubeProxy))
-	out.Kubelet = (*KubeletConfig)(unsafe.Pointer(in.Kubelet))
+	if in.Kubelet != nil {
+		in, out := &in.Kubelet, &out.Kubelet
+		*out = new(KubeletConfig)
+		if err := Convert_core_KubeletConfig_To_v1beta1_KubeletConfig(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Kubelet = nil
+	}
 	out.Version = in.Version
 	out.VerticalPodAutoscaler = (*VerticalPodAutoscaler)(unsafe.Pointer(in.VerticalPodAutoscaler))
 	out.EnableStaticTokenKubeconfig = (*bool)(unsafe.Pointer(in.EnableStaticTokenKubeconfig))
@@ -3289,26 +3721,6 @@ func Convert_core_KubernetesDashboard_To_v1beta1_KubernetesDashboard(in *core.Ku
 	return autoConvert_core_KubernetesDashboard_To_v1beta1_KubernetesDashboard(in, out, s)
 }
 
-func autoConvert_v1beta1_KubernetesInfo_To_core_KubernetesInfo(in *KubernetesInfo, out *core.KubernetesInfo, s conversion.Scope) error {
-	out.Version = in.Version
-	return nil
-}
-
-// Convert_v1beta1_KubernetesInfo_To_core_KubernetesInfo is an autogenerated conversion function.
-func Convert_v1beta1_KubernetesInfo_To_core_KubernetesInfo(in *KubernetesInfo, out *core.KubernetesInfo, s conversion.Scope) error {
-	return autoConvert_v1beta1_KubernetesInfo_To_core_KubernetesInfo(in, out, s)
-}
-
-func autoConvert_core_KubernetesInfo_To_v1beta1_KubernetesInfo(in *core.KubernetesInfo, out *KubernetesInfo, s conversion.Scope) error {
-	out.Version = in.Version
-	return nil
-}
-
-// Convert_core_KubernetesInfo_To_v1beta1_KubernetesInfo is an autogenerated conversion function.
-func Convert_core_KubernetesInfo_To_v1beta1_KubernetesInfo(in *core.KubernetesInfo, out *KubernetesInfo, s conversion.Scope) error {
-	return autoConvert_core_KubernetesInfo_To_v1beta1_KubernetesInfo(in, out, s)
-}
-
 func autoConvert_v1beta1_KubernetesSettings_To_core_KubernetesSettings(in *KubernetesSettings, out *core.KubernetesSettings, s conversion.Scope) error {
 	out.Versions = *(*[]core.ExpirableVersion)(unsafe.Pointer(&in.Versions))
 	return nil
@@ -3355,6 +3767,32 @@ func Convert_core_LastError_To_v1beta1_LastError(in *core.LastError, out *LastEr
 	return autoConvert_core_LastError_To_v1beta1_LastError(in, out, s)
 }
 
+func autoConvert_v1beta1_LastMaintenance_To_core_LastMaintenance(in *LastMaintenance, out *core.LastMaintenance, s conversion.Scope) error {
+	out.Description = in.Description
+	out.TriggeredTime = in.TriggeredTime
+	out.State = core.LastOperationState(in.State)
+	out.FailureReason = (*string)(unsafe.Pointer(in.FailureReason))
+	return nil
+}
+
+// Convert_v1beta1_LastMaintenance_To_core_LastMaintenance is an autogenerated conversion function.
+func Convert_v1beta1_LastMaintenance_To_core_LastMaintenance(in *LastMaintenance, out *core.LastMaintenance, s conversion.Scope) error {
+	return autoConvert_v1beta1_LastMaintenance_To_core_LastMaintenance(in, out, s)
+}
+
+func autoConvert_core_LastMaintenance_To_v1beta1_LastMaintenance(in *core.LastMaintenance, out *LastMaintenance, s conversion.Scope) error {
+	out.Description = in.Description
+	out.TriggeredTime = in.TriggeredTime
+	out.State = LastOperationState(in.State)
+	out.FailureReason = (*string)(unsafe.Pointer(in.FailureReason))
+	return nil
+}
+
+// Convert_core_LastMaintenance_To_v1beta1_LastMaintenance is an autogenerated conversion function.
+func Convert_core_LastMaintenance_To_v1beta1_LastMaintenance(in *core.LastMaintenance, out *LastMaintenance, s conversion.Scope) error {
+	return autoConvert_core_LastMaintenance_To_v1beta1_LastMaintenance(in, out, s)
+}
+
 func autoConvert_v1beta1_LastOperation_To_core_LastOperation(in *LastOperation, out *core.LastOperation, s conversion.Scope) error {
 	out.Description = in.Description
 	out.LastUpdateTime = in.LastUpdateTime
@@ -3394,6 +3832,7 @@ func autoConvert_v1beta1_Machine_To_core_Machine(in *Machine, out *core.Machine,
 	} else {
 		out.Image = nil
 	}
+	out.Architecture = (*string)(unsafe.Pointer(in.Architecture))
 	return nil
 }
 
@@ -3413,6 +3852,7 @@ func autoConvert_core_Machine_To_v1beta1_Machine(in *core.Machine, out *Machine,
 	} else {
 		out.Image = nil
 	}
+	out.Architecture = (*string)(unsafe.Pointer(in.Architecture))
 	return nil
 }
 
@@ -3476,6 +3916,8 @@ func autoConvert_v1beta1_MachineImageVersion_To_core_MachineImageVersion(in *Mac
 		return err
 	}
 	out.CRI = *(*[]core.CRI)(unsafe.Pointer(&in.CRI))
+	out.Architectures = *(*[]string)(unsafe.Pointer(&in.Architectures))
+	out.KubeletVersionConstraint = (*string)(unsafe.Pointer(in.KubeletVersionConstraint))
 	return nil
 }
 
@@ -3489,6 +3931,8 @@ func autoConvert_core_MachineImageVersion_To_v1beta1_MachineImageVersion(in *cor
 		return err
 	}
 	out.CRI = *(*[]CRI)(unsafe.Pointer(&in.CRI))
+	out.Architectures = *(*[]string)(unsafe.Pointer(&in.Architectures))
+	out.KubeletVersionConstraint = (*string)(unsafe.Pointer(in.KubeletVersionConstraint))
 	return nil
 }
 
@@ -3504,6 +3948,7 @@ func autoConvert_v1beta1_MachineType_To_core_MachineType(in *MachineType, out *c
 	out.Name = in.Name
 	out.Storage = (*core.MachineTypeStorage)(unsafe.Pointer(in.Storage))
 	out.Usable = (*bool)(unsafe.Pointer(in.Usable))
+	out.Architecture = (*string)(unsafe.Pointer(in.Architecture))
 	return nil
 }
 
@@ -3519,6 +3964,7 @@ func autoConvert_core_MachineType_To_v1beta1_MachineType(in *core.MachineType, o
 	out.Name = in.Name
 	out.Storage = (*MachineTypeStorage)(unsafe.Pointer(in.Storage))
 	out.Usable = (*bool)(unsafe.Pointer(in.Usable))
+	out.Architecture = (*string)(unsafe.Pointer(in.Architecture))
 	return nil
 }
 
@@ -3669,6 +4115,7 @@ func autoConvert_v1beta1_Networking_To_core_Networking(in *Networking, out *core
 	out.Pods = (*string)(unsafe.Pointer(in.Pods))
 	out.Nodes = (*string)(unsafe.Pointer(in.Nodes))
 	out.Services = (*string)(unsafe.Pointer(in.Services))
+	out.IPFamilies = *(*[]core.IPFamily)(unsafe.Pointer(&in.IPFamilies))
 	return nil
 }
 
@@ -3683,6 +4130,7 @@ func autoConvert_core_Networking_To_v1beta1_Networking(in *core.Networking, out 
 	out.Pods = (*string)(unsafe.Pointer(in.Pods))
 	out.Nodes = (*string)(unsafe.Pointer(in.Nodes))
 	out.Services = (*string)(unsafe.Pointer(in.Services))
+	out.IPFamilies = *(*[]IPFamily)(unsafe.Pointer(&in.IPFamilies))
 	return nil
 }
 
@@ -3719,6 +4167,32 @@ func autoConvert_core_NginxIngress_To_v1beta1_NginxIngress(in *core.NginxIngress
 // Convert_core_NginxIngress_To_v1beta1_NginxIngress is an autogenerated conversion function.
 func Convert_core_NginxIngress_To_v1beta1_NginxIngress(in *core.NginxIngress, out *NginxIngress, s conversion.Scope) error {
 	return autoConvert_core_NginxIngress_To_v1beta1_NginxIngress(in, out, s)
+}
+
+func autoConvert_v1beta1_NodeLocalDNS_To_core_NodeLocalDNS(in *NodeLocalDNS, out *core.NodeLocalDNS, s conversion.Scope) error {
+	out.Enabled = in.Enabled
+	out.ForceTCPToClusterDNS = (*bool)(unsafe.Pointer(in.ForceTCPToClusterDNS))
+	out.ForceTCPToUpstreamDNS = (*bool)(unsafe.Pointer(in.ForceTCPToUpstreamDNS))
+	out.DisableForwardToUpstreamDNS = (*bool)(unsafe.Pointer(in.DisableForwardToUpstreamDNS))
+	return nil
+}
+
+// Convert_v1beta1_NodeLocalDNS_To_core_NodeLocalDNS is an autogenerated conversion function.
+func Convert_v1beta1_NodeLocalDNS_To_core_NodeLocalDNS(in *NodeLocalDNS, out *core.NodeLocalDNS, s conversion.Scope) error {
+	return autoConvert_v1beta1_NodeLocalDNS_To_core_NodeLocalDNS(in, out, s)
+}
+
+func autoConvert_core_NodeLocalDNS_To_v1beta1_NodeLocalDNS(in *core.NodeLocalDNS, out *NodeLocalDNS, s conversion.Scope) error {
+	out.Enabled = in.Enabled
+	out.ForceTCPToClusterDNS = (*bool)(unsafe.Pointer(in.ForceTCPToClusterDNS))
+	out.ForceTCPToUpstreamDNS = (*bool)(unsafe.Pointer(in.ForceTCPToUpstreamDNS))
+	out.DisableForwardToUpstreamDNS = (*bool)(unsafe.Pointer(in.DisableForwardToUpstreamDNS))
+	return nil
+}
+
+// Convert_core_NodeLocalDNS_To_v1beta1_NodeLocalDNS is an autogenerated conversion function.
+func Convert_core_NodeLocalDNS_To_v1beta1_NodeLocalDNS(in *core.NodeLocalDNS, out *NodeLocalDNS, s conversion.Scope) error {
+	return autoConvert_core_NodeLocalDNS_To_v1beta1_NodeLocalDNS(in, out, s)
 }
 
 func autoConvert_v1beta1_OIDCConfig_To_core_OIDCConfig(in *OIDCConfig, out *core.OIDCConfig, s conversion.Scope) error {
@@ -3779,106 +4253,6 @@ func autoConvert_core_OpenIDConnectClientAuthentication_To_v1beta1_OpenIDConnect
 // Convert_core_OpenIDConnectClientAuthentication_To_v1beta1_OpenIDConnectClientAuthentication is an autogenerated conversion function.
 func Convert_core_OpenIDConnectClientAuthentication_To_v1beta1_OpenIDConnectClientAuthentication(in *core.OpenIDConnectClientAuthentication, out *OpenIDConnectClientAuthentication, s conversion.Scope) error {
 	return autoConvert_core_OpenIDConnectClientAuthentication_To_v1beta1_OpenIDConnectClientAuthentication(in, out, s)
-}
-
-func autoConvert_v1beta1_Plant_To_core_Plant(in *Plant, out *core.Plant, s conversion.Scope) error {
-	out.ObjectMeta = in.ObjectMeta
-	if err := Convert_v1beta1_PlantSpec_To_core_PlantSpec(&in.Spec, &out.Spec, s); err != nil {
-		return err
-	}
-	if err := Convert_v1beta1_PlantStatus_To_core_PlantStatus(&in.Status, &out.Status, s); err != nil {
-		return err
-	}
-	return nil
-}
-
-// Convert_v1beta1_Plant_To_core_Plant is an autogenerated conversion function.
-func Convert_v1beta1_Plant_To_core_Plant(in *Plant, out *core.Plant, s conversion.Scope) error {
-	return autoConvert_v1beta1_Plant_To_core_Plant(in, out, s)
-}
-
-func autoConvert_core_Plant_To_v1beta1_Plant(in *core.Plant, out *Plant, s conversion.Scope) error {
-	out.ObjectMeta = in.ObjectMeta
-	if err := Convert_core_PlantSpec_To_v1beta1_PlantSpec(&in.Spec, &out.Spec, s); err != nil {
-		return err
-	}
-	if err := Convert_core_PlantStatus_To_v1beta1_PlantStatus(&in.Status, &out.Status, s); err != nil {
-		return err
-	}
-	return nil
-}
-
-// Convert_core_Plant_To_v1beta1_Plant is an autogenerated conversion function.
-func Convert_core_Plant_To_v1beta1_Plant(in *core.Plant, out *Plant, s conversion.Scope) error {
-	return autoConvert_core_Plant_To_v1beta1_Plant(in, out, s)
-}
-
-func autoConvert_v1beta1_PlantList_To_core_PlantList(in *PlantList, out *core.PlantList, s conversion.Scope) error {
-	out.ListMeta = in.ListMeta
-	out.Items = *(*[]core.Plant)(unsafe.Pointer(&in.Items))
-	return nil
-}
-
-// Convert_v1beta1_PlantList_To_core_PlantList is an autogenerated conversion function.
-func Convert_v1beta1_PlantList_To_core_PlantList(in *PlantList, out *core.PlantList, s conversion.Scope) error {
-	return autoConvert_v1beta1_PlantList_To_core_PlantList(in, out, s)
-}
-
-func autoConvert_core_PlantList_To_v1beta1_PlantList(in *core.PlantList, out *PlantList, s conversion.Scope) error {
-	out.ListMeta = in.ListMeta
-	out.Items = *(*[]Plant)(unsafe.Pointer(&in.Items))
-	return nil
-}
-
-// Convert_core_PlantList_To_v1beta1_PlantList is an autogenerated conversion function.
-func Convert_core_PlantList_To_v1beta1_PlantList(in *core.PlantList, out *PlantList, s conversion.Scope) error {
-	return autoConvert_core_PlantList_To_v1beta1_PlantList(in, out, s)
-}
-
-func autoConvert_v1beta1_PlantSpec_To_core_PlantSpec(in *PlantSpec, out *core.PlantSpec, s conversion.Scope) error {
-	out.SecretRef = in.SecretRef
-	out.Endpoints = *(*[]core.Endpoint)(unsafe.Pointer(&in.Endpoints))
-	return nil
-}
-
-// Convert_v1beta1_PlantSpec_To_core_PlantSpec is an autogenerated conversion function.
-func Convert_v1beta1_PlantSpec_To_core_PlantSpec(in *PlantSpec, out *core.PlantSpec, s conversion.Scope) error {
-	return autoConvert_v1beta1_PlantSpec_To_core_PlantSpec(in, out, s)
-}
-
-func autoConvert_core_PlantSpec_To_v1beta1_PlantSpec(in *core.PlantSpec, out *PlantSpec, s conversion.Scope) error {
-	out.SecretRef = in.SecretRef
-	out.Endpoints = *(*[]Endpoint)(unsafe.Pointer(&in.Endpoints))
-	return nil
-}
-
-// Convert_core_PlantSpec_To_v1beta1_PlantSpec is an autogenerated conversion function.
-func Convert_core_PlantSpec_To_v1beta1_PlantSpec(in *core.PlantSpec, out *PlantSpec, s conversion.Scope) error {
-	return autoConvert_core_PlantSpec_To_v1beta1_PlantSpec(in, out, s)
-}
-
-func autoConvert_v1beta1_PlantStatus_To_core_PlantStatus(in *PlantStatus, out *core.PlantStatus, s conversion.Scope) error {
-	out.Conditions = *(*[]core.Condition)(unsafe.Pointer(&in.Conditions))
-	out.ObservedGeneration = (*int64)(unsafe.Pointer(in.ObservedGeneration))
-	out.ClusterInfo = (*core.ClusterInfo)(unsafe.Pointer(in.ClusterInfo))
-	return nil
-}
-
-// Convert_v1beta1_PlantStatus_To_core_PlantStatus is an autogenerated conversion function.
-func Convert_v1beta1_PlantStatus_To_core_PlantStatus(in *PlantStatus, out *core.PlantStatus, s conversion.Scope) error {
-	return autoConvert_v1beta1_PlantStatus_To_core_PlantStatus(in, out, s)
-}
-
-func autoConvert_core_PlantStatus_To_v1beta1_PlantStatus(in *core.PlantStatus, out *PlantStatus, s conversion.Scope) error {
-	out.Conditions = *(*[]Condition)(unsafe.Pointer(&in.Conditions))
-	out.ObservedGeneration = (*int64)(unsafe.Pointer(in.ObservedGeneration))
-	out.ClusterInfo = (*ClusterInfo)(unsafe.Pointer(in.ClusterInfo))
-	return nil
-}
-
-// Convert_core_PlantStatus_To_v1beta1_PlantStatus is an autogenerated conversion function.
-func Convert_core_PlantStatus_To_v1beta1_PlantStatus(in *core.PlantStatus, out *PlantStatus, s conversion.Scope) error {
-	return autoConvert_core_PlantStatus_To_v1beta1_PlantStatus(in, out, s)
 }
 
 func autoConvert_v1beta1_Project_To_core_Project(in *Project, out *core.Project, s conversion.Scope) error {
@@ -4075,6 +4449,7 @@ func autoConvert_v1beta1_Provider_To_core_Provider(in *Provider, out *core.Provi
 	} else {
 		out.Workers = nil
 	}
+	out.WorkersSettings = (*core.WorkersSettings)(unsafe.Pointer(in.WorkersSettings))
 	return nil
 }
 
@@ -4098,6 +4473,7 @@ func autoConvert_core_Provider_To_v1beta1_Provider(in *core.Provider, out *Provi
 	} else {
 		out.Workers = nil
 	}
+	out.WorkersSettings = (*WorkersSettings)(unsafe.Pointer(in.WorkersSettings))
 	return nil
 }
 
@@ -4202,6 +4578,28 @@ func Convert_core_Region_To_v1beta1_Region(in *core.Region, out *Region, s conve
 	return autoConvert_core_Region_To_v1beta1_Region(in, out, s)
 }
 
+func autoConvert_v1beta1_ResourceData_To_core_ResourceData(in *ResourceData, out *core.ResourceData, s conversion.Scope) error {
+	out.CrossVersionObjectReference = in.CrossVersionObjectReference
+	out.Data = in.Data
+	return nil
+}
+
+// Convert_v1beta1_ResourceData_To_core_ResourceData is an autogenerated conversion function.
+func Convert_v1beta1_ResourceData_To_core_ResourceData(in *ResourceData, out *core.ResourceData, s conversion.Scope) error {
+	return autoConvert_v1beta1_ResourceData_To_core_ResourceData(in, out, s)
+}
+
+func autoConvert_core_ResourceData_To_v1beta1_ResourceData(in *core.ResourceData, out *ResourceData, s conversion.Scope) error {
+	out.CrossVersionObjectReference = in.CrossVersionObjectReference
+	out.Data = in.Data
+	return nil
+}
+
+// Convert_core_ResourceData_To_v1beta1_ResourceData is an autogenerated conversion function.
+func Convert_core_ResourceData_To_v1beta1_ResourceData(in *core.ResourceData, out *ResourceData, s conversion.Scope) error {
+	return autoConvert_core_ResourceData_To_v1beta1_ResourceData(in, out, s)
+}
+
 func autoConvert_v1beta1_ResourceWatchCacheSize_To_core_ResourceWatchCacheSize(in *ResourceWatchCacheSize, out *core.ResourceWatchCacheSize, s conversion.Scope) error {
 	out.APIGroup = (*string)(unsafe.Pointer(in.APIGroup))
 	out.Resource = in.Resource
@@ -4224,6 +4622,26 @@ func autoConvert_core_ResourceWatchCacheSize_To_v1beta1_ResourceWatchCacheSize(i
 // Convert_core_ResourceWatchCacheSize_To_v1beta1_ResourceWatchCacheSize is an autogenerated conversion function.
 func Convert_core_ResourceWatchCacheSize_To_v1beta1_ResourceWatchCacheSize(in *core.ResourceWatchCacheSize, out *ResourceWatchCacheSize, s conversion.Scope) error {
 	return autoConvert_core_ResourceWatchCacheSize_To_v1beta1_ResourceWatchCacheSize(in, out, s)
+}
+
+func autoConvert_v1beta1_SSHAccess_To_core_SSHAccess(in *SSHAccess, out *core.SSHAccess, s conversion.Scope) error {
+	out.Enabled = in.Enabled
+	return nil
+}
+
+// Convert_v1beta1_SSHAccess_To_core_SSHAccess is an autogenerated conversion function.
+func Convert_v1beta1_SSHAccess_To_core_SSHAccess(in *SSHAccess, out *core.SSHAccess, s conversion.Scope) error {
+	return autoConvert_v1beta1_SSHAccess_To_core_SSHAccess(in, out, s)
+}
+
+func autoConvert_core_SSHAccess_To_v1beta1_SSHAccess(in *core.SSHAccess, out *SSHAccess, s conversion.Scope) error {
+	out.Enabled = in.Enabled
+	return nil
+}
+
+// Convert_core_SSHAccess_To_v1beta1_SSHAccess is an autogenerated conversion function.
+func Convert_core_SSHAccess_To_v1beta1_SSHAccess(in *core.SSHAccess, out *SSHAccess, s conversion.Scope) error {
+	return autoConvert_core_SSHAccess_To_v1beta1_SSHAccess(in, out, s)
 }
 
 func autoConvert_v1beta1_SecretBinding_To_core_SecretBinding(in *SecretBinding, out *core.SecretBinding, s conversion.Scope) error {
@@ -4448,6 +4866,7 @@ func autoConvert_v1beta1_SeedNetworks_To_core_SeedNetworks(in *SeedNetworks, out
 	out.Services = in.Services
 	out.ShootDefaults = (*core.ShootNetworks)(unsafe.Pointer(in.ShootDefaults))
 	out.BlockCIDRs = *(*[]string)(unsafe.Pointer(&in.BlockCIDRs))
+	out.IPFamilies = *(*[]core.IPFamily)(unsafe.Pointer(&in.IPFamilies))
 	return nil
 }
 
@@ -4462,6 +4881,7 @@ func autoConvert_core_SeedNetworks_To_v1beta1_SeedNetworks(in *core.SeedNetworks
 	out.Services = in.Services
 	out.ShootDefaults = (*ShootNetworks)(unsafe.Pointer(in.ShootDefaults))
 	out.BlockCIDRs = *(*[]string)(unsafe.Pointer(&in.BlockCIDRs))
+	out.IPFamilies = *(*[]IPFamily)(unsafe.Pointer(&in.IPFamilies))
 	return nil
 }
 
@@ -4474,6 +4894,7 @@ func autoConvert_v1beta1_SeedProvider_To_core_SeedProvider(in *SeedProvider, out
 	out.Type = in.Type
 	out.ProviderConfig = (*runtime.RawExtension)(unsafe.Pointer(in.ProviderConfig))
 	out.Region = in.Region
+	out.Zones = *(*[]string)(unsafe.Pointer(&in.Zones))
 	return nil
 }
 
@@ -4486,6 +4907,7 @@ func autoConvert_core_SeedProvider_To_v1beta1_SeedProvider(in *core.SeedProvider
 	out.Type = in.Type
 	out.ProviderConfig = (*runtime.RawExtension)(unsafe.Pointer(in.ProviderConfig))
 	out.Region = in.Region
+	out.Zones = *(*[]string)(unsafe.Pointer(&in.Zones))
 	return nil
 }
 
@@ -4600,6 +5022,8 @@ func Convert_core_SeedSettingExcessCapacityReservation_To_v1beta1_SeedSettingExc
 
 func autoConvert_v1beta1_SeedSettingLoadBalancerServices_To_core_SeedSettingLoadBalancerServices(in *SeedSettingLoadBalancerServices, out *core.SeedSettingLoadBalancerServices, s conversion.Scope) error {
 	out.Annotations = *(*map[string]string)(unsafe.Pointer(&in.Annotations))
+	out.ExternalTrafficPolicy = (*v1.ServiceExternalTrafficPolicyType)(unsafe.Pointer(in.ExternalTrafficPolicy))
+	out.Zones = *(*[]core.SeedSettingLoadBalancerServicesZones)(unsafe.Pointer(&in.Zones))
 	return nil
 }
 
@@ -4610,12 +5034,38 @@ func Convert_v1beta1_SeedSettingLoadBalancerServices_To_core_SeedSettingLoadBala
 
 func autoConvert_core_SeedSettingLoadBalancerServices_To_v1beta1_SeedSettingLoadBalancerServices(in *core.SeedSettingLoadBalancerServices, out *SeedSettingLoadBalancerServices, s conversion.Scope) error {
 	out.Annotations = *(*map[string]string)(unsafe.Pointer(&in.Annotations))
+	out.ExternalTrafficPolicy = (*v1.ServiceExternalTrafficPolicyType)(unsafe.Pointer(in.ExternalTrafficPolicy))
+	out.Zones = *(*[]SeedSettingLoadBalancerServicesZones)(unsafe.Pointer(&in.Zones))
 	return nil
 }
 
 // Convert_core_SeedSettingLoadBalancerServices_To_v1beta1_SeedSettingLoadBalancerServices is an autogenerated conversion function.
 func Convert_core_SeedSettingLoadBalancerServices_To_v1beta1_SeedSettingLoadBalancerServices(in *core.SeedSettingLoadBalancerServices, out *SeedSettingLoadBalancerServices, s conversion.Scope) error {
 	return autoConvert_core_SeedSettingLoadBalancerServices_To_v1beta1_SeedSettingLoadBalancerServices(in, out, s)
+}
+
+func autoConvert_v1beta1_SeedSettingLoadBalancerServicesZones_To_core_SeedSettingLoadBalancerServicesZones(in *SeedSettingLoadBalancerServicesZones, out *core.SeedSettingLoadBalancerServicesZones, s conversion.Scope) error {
+	out.Name = in.Name
+	out.Annotations = *(*map[string]string)(unsafe.Pointer(&in.Annotations))
+	out.ExternalTrafficPolicy = (*v1.ServiceExternalTrafficPolicyType)(unsafe.Pointer(in.ExternalTrafficPolicy))
+	return nil
+}
+
+// Convert_v1beta1_SeedSettingLoadBalancerServicesZones_To_core_SeedSettingLoadBalancerServicesZones is an autogenerated conversion function.
+func Convert_v1beta1_SeedSettingLoadBalancerServicesZones_To_core_SeedSettingLoadBalancerServicesZones(in *SeedSettingLoadBalancerServicesZones, out *core.SeedSettingLoadBalancerServicesZones, s conversion.Scope) error {
+	return autoConvert_v1beta1_SeedSettingLoadBalancerServicesZones_To_core_SeedSettingLoadBalancerServicesZones(in, out, s)
+}
+
+func autoConvert_core_SeedSettingLoadBalancerServicesZones_To_v1beta1_SeedSettingLoadBalancerServicesZones(in *core.SeedSettingLoadBalancerServicesZones, out *SeedSettingLoadBalancerServicesZones, s conversion.Scope) error {
+	out.Name = in.Name
+	out.Annotations = *(*map[string]string)(unsafe.Pointer(&in.Annotations))
+	out.ExternalTrafficPolicy = (*v1.ServiceExternalTrafficPolicyType)(unsafe.Pointer(in.ExternalTrafficPolicy))
+	return nil
+}
+
+// Convert_core_SeedSettingLoadBalancerServicesZones_To_v1beta1_SeedSettingLoadBalancerServicesZones is an autogenerated conversion function.
+func Convert_core_SeedSettingLoadBalancerServicesZones_To_v1beta1_SeedSettingLoadBalancerServicesZones(in *core.SeedSettingLoadBalancerServicesZones, out *SeedSettingLoadBalancerServicesZones, s conversion.Scope) error {
+	return autoConvert_core_SeedSettingLoadBalancerServicesZones_To_v1beta1_SeedSettingLoadBalancerServicesZones(in, out, s)
 }
 
 func autoConvert_v1beta1_SeedSettingOwnerChecks_To_core_SeedSettingOwnerChecks(in *SeedSettingOwnerChecks, out *core.SeedSettingOwnerChecks, s conversion.Scope) error {
@@ -4658,24 +5108,24 @@ func Convert_core_SeedSettingScheduling_To_v1beta1_SeedSettingScheduling(in *cor
 	return autoConvert_core_SeedSettingScheduling_To_v1beta1_SeedSettingScheduling(in, out, s)
 }
 
-func autoConvert_v1beta1_SeedSettingShootDNS_To_core_SeedSettingShootDNS(in *SeedSettingShootDNS, out *core.SeedSettingShootDNS, s conversion.Scope) error {
+func autoConvert_v1beta1_SeedSettingTopologyAwareRouting_To_core_SeedSettingTopologyAwareRouting(in *SeedSettingTopologyAwareRouting, out *core.SeedSettingTopologyAwareRouting, s conversion.Scope) error {
 	out.Enabled = in.Enabled
 	return nil
 }
 
-// Convert_v1beta1_SeedSettingShootDNS_To_core_SeedSettingShootDNS is an autogenerated conversion function.
-func Convert_v1beta1_SeedSettingShootDNS_To_core_SeedSettingShootDNS(in *SeedSettingShootDNS, out *core.SeedSettingShootDNS, s conversion.Scope) error {
-	return autoConvert_v1beta1_SeedSettingShootDNS_To_core_SeedSettingShootDNS(in, out, s)
+// Convert_v1beta1_SeedSettingTopologyAwareRouting_To_core_SeedSettingTopologyAwareRouting is an autogenerated conversion function.
+func Convert_v1beta1_SeedSettingTopologyAwareRouting_To_core_SeedSettingTopologyAwareRouting(in *SeedSettingTopologyAwareRouting, out *core.SeedSettingTopologyAwareRouting, s conversion.Scope) error {
+	return autoConvert_v1beta1_SeedSettingTopologyAwareRouting_To_core_SeedSettingTopologyAwareRouting(in, out, s)
 }
 
-func autoConvert_core_SeedSettingShootDNS_To_v1beta1_SeedSettingShootDNS(in *core.SeedSettingShootDNS, out *SeedSettingShootDNS, s conversion.Scope) error {
+func autoConvert_core_SeedSettingTopologyAwareRouting_To_v1beta1_SeedSettingTopologyAwareRouting(in *core.SeedSettingTopologyAwareRouting, out *SeedSettingTopologyAwareRouting, s conversion.Scope) error {
 	out.Enabled = in.Enabled
 	return nil
 }
 
-// Convert_core_SeedSettingShootDNS_To_v1beta1_SeedSettingShootDNS is an autogenerated conversion function.
-func Convert_core_SeedSettingShootDNS_To_v1beta1_SeedSettingShootDNS(in *core.SeedSettingShootDNS, out *SeedSettingShootDNS, s conversion.Scope) error {
-	return autoConvert_core_SeedSettingShootDNS_To_v1beta1_SeedSettingShootDNS(in, out, s)
+// Convert_core_SeedSettingTopologyAwareRouting_To_v1beta1_SeedSettingTopologyAwareRouting is an autogenerated conversion function.
+func Convert_core_SeedSettingTopologyAwareRouting_To_v1beta1_SeedSettingTopologyAwareRouting(in *core.SeedSettingTopologyAwareRouting, out *SeedSettingTopologyAwareRouting, s conversion.Scope) error {
+	return autoConvert_core_SeedSettingTopologyAwareRouting_To_v1beta1_SeedSettingTopologyAwareRouting(in, out, s)
 }
 
 func autoConvert_v1beta1_SeedSettingVerticalPodAutoscaler_To_core_SeedSettingVerticalPodAutoscaler(in *SeedSettingVerticalPodAutoscaler, out *core.SeedSettingVerticalPodAutoscaler, s conversion.Scope) error {
@@ -4701,11 +5151,11 @@ func Convert_core_SeedSettingVerticalPodAutoscaler_To_v1beta1_SeedSettingVertica
 func autoConvert_v1beta1_SeedSettings_To_core_SeedSettings(in *SeedSettings, out *core.SeedSettings, s conversion.Scope) error {
 	out.ExcessCapacityReservation = (*core.SeedSettingExcessCapacityReservation)(unsafe.Pointer(in.ExcessCapacityReservation))
 	out.Scheduling = (*core.SeedSettingScheduling)(unsafe.Pointer(in.Scheduling))
-	out.ShootDNS = (*core.SeedSettingShootDNS)(unsafe.Pointer(in.ShootDNS))
 	out.LoadBalancerServices = (*core.SeedSettingLoadBalancerServices)(unsafe.Pointer(in.LoadBalancerServices))
 	out.VerticalPodAutoscaler = (*core.SeedSettingVerticalPodAutoscaler)(unsafe.Pointer(in.VerticalPodAutoscaler))
 	out.OwnerChecks = (*core.SeedSettingOwnerChecks)(unsafe.Pointer(in.OwnerChecks))
 	out.DependencyWatchdog = (*core.SeedSettingDependencyWatchdog)(unsafe.Pointer(in.DependencyWatchdog))
+	out.TopologyAwareRouting = (*core.SeedSettingTopologyAwareRouting)(unsafe.Pointer(in.TopologyAwareRouting))
 	return nil
 }
 
@@ -4717,11 +5167,11 @@ func Convert_v1beta1_SeedSettings_To_core_SeedSettings(in *SeedSettings, out *co
 func autoConvert_core_SeedSettings_To_v1beta1_SeedSettings(in *core.SeedSettings, out *SeedSettings, s conversion.Scope) error {
 	out.ExcessCapacityReservation = (*SeedSettingExcessCapacityReservation)(unsafe.Pointer(in.ExcessCapacityReservation))
 	out.Scheduling = (*SeedSettingScheduling)(unsafe.Pointer(in.Scheduling))
-	out.ShootDNS = (*SeedSettingShootDNS)(unsafe.Pointer(in.ShootDNS))
 	out.LoadBalancerServices = (*SeedSettingLoadBalancerServices)(unsafe.Pointer(in.LoadBalancerServices))
 	out.VerticalPodAutoscaler = (*SeedSettingVerticalPodAutoscaler)(unsafe.Pointer(in.VerticalPodAutoscaler))
 	out.OwnerChecks = (*SeedSettingOwnerChecks)(unsafe.Pointer(in.OwnerChecks))
 	out.DependencyWatchdog = (*SeedSettingDependencyWatchdog)(unsafe.Pointer(in.DependencyWatchdog))
+	out.TopologyAwareRouting = (*SeedSettingTopologyAwareRouting)(unsafe.Pointer(in.TopologyAwareRouting))
 	return nil
 }
 
@@ -4906,7 +5356,6 @@ func Convert_core_SeedVolumeProvider_To_v1beta1_SeedVolumeProvider(in *core.Seed
 
 func autoConvert_v1beta1_ServiceAccountConfig_To_core_ServiceAccountConfig(in *ServiceAccountConfig, out *core.ServiceAccountConfig, s conversion.Scope) error {
 	out.Issuer = (*string)(unsafe.Pointer(in.Issuer))
-	out.SigningKeySecret = (*v1.LocalObjectReference)(unsafe.Pointer(in.SigningKeySecret))
 	out.ExtendTokenExpiration = (*bool)(unsafe.Pointer(in.ExtendTokenExpiration))
 	out.MaxTokenExpiration = (*metav1.Duration)(unsafe.Pointer(in.MaxTokenExpiration))
 	out.AcceptedIssuers = *(*[]string)(unsafe.Pointer(&in.AcceptedIssuers))
@@ -4920,7 +5369,6 @@ func Convert_v1beta1_ServiceAccountConfig_To_core_ServiceAccountConfig(in *Servi
 
 func autoConvert_core_ServiceAccountConfig_To_v1beta1_ServiceAccountConfig(in *core.ServiceAccountConfig, out *ServiceAccountConfig, s conversion.Scope) error {
 	out.Issuer = (*string)(unsafe.Pointer(in.Issuer))
-	out.SigningKeySecret = (*v1.LocalObjectReference)(unsafe.Pointer(in.SigningKeySecret))
 	out.ExtendTokenExpiration = (*bool)(unsafe.Pointer(in.ExtendTokenExpiration))
 	out.MaxTokenExpiration = (*metav1.Duration)(unsafe.Pointer(in.MaxTokenExpiration))
 	out.AcceptedIssuers = *(*[]string)(unsafe.Pointer(&in.AcceptedIssuers))
@@ -4930,6 +5378,34 @@ func autoConvert_core_ServiceAccountConfig_To_v1beta1_ServiceAccountConfig(in *c
 // Convert_core_ServiceAccountConfig_To_v1beta1_ServiceAccountConfig is an autogenerated conversion function.
 func Convert_core_ServiceAccountConfig_To_v1beta1_ServiceAccountConfig(in *core.ServiceAccountConfig, out *ServiceAccountConfig, s conversion.Scope) error {
 	return autoConvert_core_ServiceAccountConfig_To_v1beta1_ServiceAccountConfig(in, out, s)
+}
+
+func autoConvert_v1beta1_ServiceAccountKeyRotation_To_core_ServiceAccountKeyRotation(in *ServiceAccountKeyRotation, out *core.ServiceAccountKeyRotation, s conversion.Scope) error {
+	out.Phase = core.CredentialsRotationPhase(in.Phase)
+	out.LastCompletionTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTime))
+	out.LastInitiationTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationTime))
+	out.LastInitiationFinishedTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationFinishedTime))
+	out.LastCompletionTriggeredTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTriggeredTime))
+	return nil
+}
+
+// Convert_v1beta1_ServiceAccountKeyRotation_To_core_ServiceAccountKeyRotation is an autogenerated conversion function.
+func Convert_v1beta1_ServiceAccountKeyRotation_To_core_ServiceAccountKeyRotation(in *ServiceAccountKeyRotation, out *core.ServiceAccountKeyRotation, s conversion.Scope) error {
+	return autoConvert_v1beta1_ServiceAccountKeyRotation_To_core_ServiceAccountKeyRotation(in, out, s)
+}
+
+func autoConvert_core_ServiceAccountKeyRotation_To_v1beta1_ServiceAccountKeyRotation(in *core.ServiceAccountKeyRotation, out *ServiceAccountKeyRotation, s conversion.Scope) error {
+	out.Phase = CredentialsRotationPhase(in.Phase)
+	out.LastInitiationTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationTime))
+	out.LastInitiationFinishedTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationFinishedTime))
+	out.LastCompletionTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTime))
+	out.LastCompletionTriggeredTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTriggeredTime))
+	return nil
+}
+
+// Convert_core_ServiceAccountKeyRotation_To_v1beta1_ServiceAccountKeyRotation is an autogenerated conversion function.
+func Convert_core_ServiceAccountKeyRotation_To_v1beta1_ServiceAccountKeyRotation(in *core.ServiceAccountKeyRotation, out *ServiceAccountKeyRotation, s conversion.Scope) error {
+	return autoConvert_core_ServiceAccountKeyRotation_To_v1beta1_ServiceAccountKeyRotation(in, out, s)
 }
 
 func autoConvert_v1beta1_Shoot_To_core_Shoot(in *Shoot, out *core.Shoot, s conversion.Scope) error {
@@ -4986,30 +5462,6 @@ func Convert_core_ShootAdvertisedAddress_To_v1beta1_ShootAdvertisedAddress(in *c
 	return autoConvert_core_ShootAdvertisedAddress_To_v1beta1_ShootAdvertisedAddress(in, out, s)
 }
 
-func autoConvert_v1beta1_ShootCARotation_To_core_ShootCARotation(in *ShootCARotation, out *core.ShootCARotation, s conversion.Scope) error {
-	out.Phase = core.ShootCredentialsRotationPhase(in.Phase)
-	out.LastInitiationTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationTime))
-	out.LastCompletionTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTime))
-	return nil
-}
-
-// Convert_v1beta1_ShootCARotation_To_core_ShootCARotation is an autogenerated conversion function.
-func Convert_v1beta1_ShootCARotation_To_core_ShootCARotation(in *ShootCARotation, out *core.ShootCARotation, s conversion.Scope) error {
-	return autoConvert_v1beta1_ShootCARotation_To_core_ShootCARotation(in, out, s)
-}
-
-func autoConvert_core_ShootCARotation_To_v1beta1_ShootCARotation(in *core.ShootCARotation, out *ShootCARotation, s conversion.Scope) error {
-	out.Phase = ShootCredentialsRotationPhase(in.Phase)
-	out.LastInitiationTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationTime))
-	out.LastCompletionTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTime))
-	return nil
-}
-
-// Convert_core_ShootCARotation_To_v1beta1_ShootCARotation is an autogenerated conversion function.
-func Convert_core_ShootCARotation_To_v1beta1_ShootCARotation(in *core.ShootCARotation, out *ShootCARotation, s conversion.Scope) error {
-	return autoConvert_core_ShootCARotation_To_v1beta1_ShootCARotation(in, out, s)
-}
-
 func autoConvert_v1beta1_ShootCredentials_To_core_ShootCredentials(in *ShootCredentials, out *core.ShootCredentials, s conversion.Scope) error {
 	out.Rotation = (*core.ShootCredentialsRotation)(unsafe.Pointer(in.Rotation))
 	return nil
@@ -5031,12 +5483,12 @@ func Convert_core_ShootCredentials_To_v1beta1_ShootCredentials(in *core.ShootCre
 }
 
 func autoConvert_v1beta1_ShootCredentialsRotation_To_core_ShootCredentialsRotation(in *ShootCredentialsRotation, out *core.ShootCredentialsRotation, s conversion.Scope) error {
-	out.CertificateAuthorities = (*core.ShootCARotation)(unsafe.Pointer(in.CertificateAuthorities))
+	out.CertificateAuthorities = (*core.CARotation)(unsafe.Pointer(in.CertificateAuthorities))
 	out.Kubeconfig = (*core.ShootKubeconfigRotation)(unsafe.Pointer(in.Kubeconfig))
 	out.SSHKeypair = (*core.ShootSSHKeypairRotation)(unsafe.Pointer(in.SSHKeypair))
 	out.Observability = (*core.ShootObservabilityRotation)(unsafe.Pointer(in.Observability))
-	out.ServiceAccountKey = (*core.ShootServiceAccountKeyRotation)(unsafe.Pointer(in.ServiceAccountKey))
-	out.ETCDEncryptionKey = (*core.ShootETCDEncryptionKeyRotation)(unsafe.Pointer(in.ETCDEncryptionKey))
+	out.ServiceAccountKey = (*core.ServiceAccountKeyRotation)(unsafe.Pointer(in.ServiceAccountKey))
+	out.ETCDEncryptionKey = (*core.ETCDEncryptionKeyRotation)(unsafe.Pointer(in.ETCDEncryptionKey))
 	return nil
 }
 
@@ -5046,42 +5498,18 @@ func Convert_v1beta1_ShootCredentialsRotation_To_core_ShootCredentialsRotation(i
 }
 
 func autoConvert_core_ShootCredentialsRotation_To_v1beta1_ShootCredentialsRotation(in *core.ShootCredentialsRotation, out *ShootCredentialsRotation, s conversion.Scope) error {
-	out.CertificateAuthorities = (*ShootCARotation)(unsafe.Pointer(in.CertificateAuthorities))
+	out.CertificateAuthorities = (*CARotation)(unsafe.Pointer(in.CertificateAuthorities))
 	out.Kubeconfig = (*ShootKubeconfigRotation)(unsafe.Pointer(in.Kubeconfig))
 	out.SSHKeypair = (*ShootSSHKeypairRotation)(unsafe.Pointer(in.SSHKeypair))
 	out.Observability = (*ShootObservabilityRotation)(unsafe.Pointer(in.Observability))
-	out.ServiceAccountKey = (*ShootServiceAccountKeyRotation)(unsafe.Pointer(in.ServiceAccountKey))
-	out.ETCDEncryptionKey = (*ShootETCDEncryptionKeyRotation)(unsafe.Pointer(in.ETCDEncryptionKey))
+	out.ServiceAccountKey = (*ServiceAccountKeyRotation)(unsafe.Pointer(in.ServiceAccountKey))
+	out.ETCDEncryptionKey = (*ETCDEncryptionKeyRotation)(unsafe.Pointer(in.ETCDEncryptionKey))
 	return nil
 }
 
 // Convert_core_ShootCredentialsRotation_To_v1beta1_ShootCredentialsRotation is an autogenerated conversion function.
 func Convert_core_ShootCredentialsRotation_To_v1beta1_ShootCredentialsRotation(in *core.ShootCredentialsRotation, out *ShootCredentialsRotation, s conversion.Scope) error {
 	return autoConvert_core_ShootCredentialsRotation_To_v1beta1_ShootCredentialsRotation(in, out, s)
-}
-
-func autoConvert_v1beta1_ShootETCDEncryptionKeyRotation_To_core_ShootETCDEncryptionKeyRotation(in *ShootETCDEncryptionKeyRotation, out *core.ShootETCDEncryptionKeyRotation, s conversion.Scope) error {
-	out.Phase = core.ShootCredentialsRotationPhase(in.Phase)
-	out.LastInitiationTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationTime))
-	out.LastCompletionTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTime))
-	return nil
-}
-
-// Convert_v1beta1_ShootETCDEncryptionKeyRotation_To_core_ShootETCDEncryptionKeyRotation is an autogenerated conversion function.
-func Convert_v1beta1_ShootETCDEncryptionKeyRotation_To_core_ShootETCDEncryptionKeyRotation(in *ShootETCDEncryptionKeyRotation, out *core.ShootETCDEncryptionKeyRotation, s conversion.Scope) error {
-	return autoConvert_v1beta1_ShootETCDEncryptionKeyRotation_To_core_ShootETCDEncryptionKeyRotation(in, out, s)
-}
-
-func autoConvert_core_ShootETCDEncryptionKeyRotation_To_v1beta1_ShootETCDEncryptionKeyRotation(in *core.ShootETCDEncryptionKeyRotation, out *ShootETCDEncryptionKeyRotation, s conversion.Scope) error {
-	out.Phase = ShootCredentialsRotationPhase(in.Phase)
-	out.LastInitiationTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationTime))
-	out.LastCompletionTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTime))
-	return nil
-}
-
-// Convert_core_ShootETCDEncryptionKeyRotation_To_v1beta1_ShootETCDEncryptionKeyRotation is an autogenerated conversion function.
-func Convert_core_ShootETCDEncryptionKeyRotation_To_v1beta1_ShootETCDEncryptionKeyRotation(in *core.ShootETCDEncryptionKeyRotation, out *ShootETCDEncryptionKeyRotation, s conversion.Scope) error {
-	return autoConvert_core_ShootETCDEncryptionKeyRotation_To_v1beta1_ShootETCDEncryptionKeyRotation(in, out, s)
 }
 
 func autoConvert_v1beta1_ShootKubeconfigRotation_To_core_ShootKubeconfigRotation(in *ShootKubeconfigRotation, out *core.ShootKubeconfigRotation, s conversion.Scope) error {
@@ -5242,30 +5670,6 @@ func Convert_core_ShootSSHKeypairRotation_To_v1beta1_ShootSSHKeypairRotation(in 
 	return autoConvert_core_ShootSSHKeypairRotation_To_v1beta1_ShootSSHKeypairRotation(in, out, s)
 }
 
-func autoConvert_v1beta1_ShootServiceAccountKeyRotation_To_core_ShootServiceAccountKeyRotation(in *ShootServiceAccountKeyRotation, out *core.ShootServiceAccountKeyRotation, s conversion.Scope) error {
-	out.Phase = core.ShootCredentialsRotationPhase(in.Phase)
-	out.LastInitiationTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationTime))
-	out.LastCompletionTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTime))
-	return nil
-}
-
-// Convert_v1beta1_ShootServiceAccountKeyRotation_To_core_ShootServiceAccountKeyRotation is an autogenerated conversion function.
-func Convert_v1beta1_ShootServiceAccountKeyRotation_To_core_ShootServiceAccountKeyRotation(in *ShootServiceAccountKeyRotation, out *core.ShootServiceAccountKeyRotation, s conversion.Scope) error {
-	return autoConvert_v1beta1_ShootServiceAccountKeyRotation_To_core_ShootServiceAccountKeyRotation(in, out, s)
-}
-
-func autoConvert_core_ShootServiceAccountKeyRotation_To_v1beta1_ShootServiceAccountKeyRotation(in *core.ShootServiceAccountKeyRotation, out *ShootServiceAccountKeyRotation, s conversion.Scope) error {
-	out.Phase = ShootCredentialsRotationPhase(in.Phase)
-	out.LastInitiationTime = (*metav1.Time)(unsafe.Pointer(in.LastInitiationTime))
-	out.LastCompletionTime = (*metav1.Time)(unsafe.Pointer(in.LastCompletionTime))
-	return nil
-}
-
-// Convert_core_ShootServiceAccountKeyRotation_To_v1beta1_ShootServiceAccountKeyRotation is an autogenerated conversion function.
-func Convert_core_ShootServiceAccountKeyRotation_To_v1beta1_ShootServiceAccountKeyRotation(in *core.ShootServiceAccountKeyRotation, out *ShootServiceAccountKeyRotation, s conversion.Scope) error {
-	return autoConvert_core_ShootServiceAccountKeyRotation_To_v1beta1_ShootServiceAccountKeyRotation(in, out, s)
-}
-
 func autoConvert_v1beta1_ShootSpec_To_core_ShootSpec(in *ShootSpec, out *core.ShootSpec, s conversion.Scope) error {
 	out.Addons = (*core.Addons)(unsafe.Pointer(in.Addons))
 	out.CloudProfileName = in.CloudProfileName
@@ -5292,6 +5696,7 @@ func autoConvert_v1beta1_ShootSpec_To_core_ShootSpec(in *ShootSpec, out *core.Sh
 	out.Tolerations = *(*[]core.Toleration)(unsafe.Pointer(&in.Tolerations))
 	out.ExposureClassName = (*string)(unsafe.Pointer(in.ExposureClassName))
 	out.SystemComponents = (*core.SystemComponents)(unsafe.Pointer(in.SystemComponents))
+	out.ControlPlane = (*core.ControlPlane)(unsafe.Pointer(in.ControlPlane))
 	return nil
 }
 
@@ -5326,12 +5731,85 @@ func autoConvert_core_ShootSpec_To_v1beta1_ShootSpec(in *core.ShootSpec, out *Sh
 	out.Tolerations = *(*[]Toleration)(unsafe.Pointer(&in.Tolerations))
 	out.ExposureClassName = (*string)(unsafe.Pointer(in.ExposureClassName))
 	out.SystemComponents = (*SystemComponents)(unsafe.Pointer(in.SystemComponents))
+	out.ControlPlane = (*ControlPlane)(unsafe.Pointer(in.ControlPlane))
 	return nil
 }
 
 // Convert_core_ShootSpec_To_v1beta1_ShootSpec is an autogenerated conversion function.
 func Convert_core_ShootSpec_To_v1beta1_ShootSpec(in *core.ShootSpec, out *ShootSpec, s conversion.Scope) error {
 	return autoConvert_core_ShootSpec_To_v1beta1_ShootSpec(in, out, s)
+}
+
+func autoConvert_v1beta1_ShootState_To_core_ShootState(in *ShootState, out *core.ShootState, s conversion.Scope) error {
+	out.ObjectMeta = in.ObjectMeta
+	if err := Convert_v1beta1_ShootStateSpec_To_core_ShootStateSpec(&in.Spec, &out.Spec, s); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Convert_v1beta1_ShootState_To_core_ShootState is an autogenerated conversion function.
+func Convert_v1beta1_ShootState_To_core_ShootState(in *ShootState, out *core.ShootState, s conversion.Scope) error {
+	return autoConvert_v1beta1_ShootState_To_core_ShootState(in, out, s)
+}
+
+func autoConvert_core_ShootState_To_v1beta1_ShootState(in *core.ShootState, out *ShootState, s conversion.Scope) error {
+	out.ObjectMeta = in.ObjectMeta
+	if err := Convert_core_ShootStateSpec_To_v1beta1_ShootStateSpec(&in.Spec, &out.Spec, s); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Convert_core_ShootState_To_v1beta1_ShootState is an autogenerated conversion function.
+func Convert_core_ShootState_To_v1beta1_ShootState(in *core.ShootState, out *ShootState, s conversion.Scope) error {
+	return autoConvert_core_ShootState_To_v1beta1_ShootState(in, out, s)
+}
+
+func autoConvert_v1beta1_ShootStateList_To_core_ShootStateList(in *ShootStateList, out *core.ShootStateList, s conversion.Scope) error {
+	out.ListMeta = in.ListMeta
+	out.Items = *(*[]core.ShootState)(unsafe.Pointer(&in.Items))
+	return nil
+}
+
+// Convert_v1beta1_ShootStateList_To_core_ShootStateList is an autogenerated conversion function.
+func Convert_v1beta1_ShootStateList_To_core_ShootStateList(in *ShootStateList, out *core.ShootStateList, s conversion.Scope) error {
+	return autoConvert_v1beta1_ShootStateList_To_core_ShootStateList(in, out, s)
+}
+
+func autoConvert_core_ShootStateList_To_v1beta1_ShootStateList(in *core.ShootStateList, out *ShootStateList, s conversion.Scope) error {
+	out.ListMeta = in.ListMeta
+	out.Items = *(*[]ShootState)(unsafe.Pointer(&in.Items))
+	return nil
+}
+
+// Convert_core_ShootStateList_To_v1beta1_ShootStateList is an autogenerated conversion function.
+func Convert_core_ShootStateList_To_v1beta1_ShootStateList(in *core.ShootStateList, out *ShootStateList, s conversion.Scope) error {
+	return autoConvert_core_ShootStateList_To_v1beta1_ShootStateList(in, out, s)
+}
+
+func autoConvert_v1beta1_ShootStateSpec_To_core_ShootStateSpec(in *ShootStateSpec, out *core.ShootStateSpec, s conversion.Scope) error {
+	out.Gardener = *(*[]core.GardenerResourceData)(unsafe.Pointer(&in.Gardener))
+	out.Extensions = *(*[]core.ExtensionResourceState)(unsafe.Pointer(&in.Extensions))
+	out.Resources = *(*[]core.ResourceData)(unsafe.Pointer(&in.Resources))
+	return nil
+}
+
+// Convert_v1beta1_ShootStateSpec_To_core_ShootStateSpec is an autogenerated conversion function.
+func Convert_v1beta1_ShootStateSpec_To_core_ShootStateSpec(in *ShootStateSpec, out *core.ShootStateSpec, s conversion.Scope) error {
+	return autoConvert_v1beta1_ShootStateSpec_To_core_ShootStateSpec(in, out, s)
+}
+
+func autoConvert_core_ShootStateSpec_To_v1beta1_ShootStateSpec(in *core.ShootStateSpec, out *ShootStateSpec, s conversion.Scope) error {
+	out.Gardener = *(*[]GardenerResourceData)(unsafe.Pointer(&in.Gardener))
+	out.Extensions = *(*[]ExtensionResourceState)(unsafe.Pointer(&in.Extensions))
+	out.Resources = *(*[]ResourceData)(unsafe.Pointer(&in.Resources))
+	return nil
+}
+
+// Convert_core_ShootStateSpec_To_v1beta1_ShootStateSpec is an autogenerated conversion function.
+func Convert_core_ShootStateSpec_To_v1beta1_ShootStateSpec(in *core.ShootStateSpec, out *ShootStateSpec, s conversion.Scope) error {
+	return autoConvert_core_ShootStateSpec_To_v1beta1_ShootStateSpec(in, out, s)
 }
 
 func autoConvert_v1beta1_ShootStatus_To_core_ShootStatus(in *ShootStatus, out *core.ShootStatus, s conversion.Scope) error {
@@ -5353,6 +5831,7 @@ func autoConvert_v1beta1_ShootStatus_To_core_ShootStatus(in *ShootStatus, out *c
 	out.MigrationStartTime = (*metav1.Time)(unsafe.Pointer(in.MigrationStartTime))
 	out.Credentials = (*core.ShootCredentials)(unsafe.Pointer(in.Credentials))
 	out.LastHibernationTriggerTime = (*metav1.Time)(unsafe.Pointer(in.LastHibernationTriggerTime))
+	out.LastMaintenance = (*core.LastMaintenance)(unsafe.Pointer(in.LastMaintenance))
 	return nil
 }
 
@@ -5380,6 +5859,7 @@ func autoConvert_core_ShootStatus_To_v1beta1_ShootStatus(in *core.ShootStatus, o
 	out.AdvertisedAddresses = *(*[]ShootAdvertisedAddress)(unsafe.Pointer(&in.AdvertisedAddresses))
 	out.MigrationStartTime = (*metav1.Time)(unsafe.Pointer(in.MigrationStartTime))
 	out.Credentials = (*ShootCredentials)(unsafe.Pointer(in.Credentials))
+	out.LastMaintenance = (*LastMaintenance)(unsafe.Pointer(in.LastMaintenance))
 	return nil
 }
 
@@ -5416,6 +5896,7 @@ func Convert_core_ShootTemplate_To_v1beta1_ShootTemplate(in *core.ShootTemplate,
 
 func autoConvert_v1beta1_SystemComponents_To_core_SystemComponents(in *SystemComponents, out *core.SystemComponents, s conversion.Scope) error {
 	out.CoreDNS = (*core.CoreDNS)(unsafe.Pointer(in.CoreDNS))
+	out.NodeLocalDNS = (*core.NodeLocalDNS)(unsafe.Pointer(in.NodeLocalDNS))
 	return nil
 }
 
@@ -5426,6 +5907,7 @@ func Convert_v1beta1_SystemComponents_To_core_SystemComponents(in *SystemCompone
 
 func autoConvert_core_SystemComponents_To_v1beta1_SystemComponents(in *core.SystemComponents, out *SystemComponents, s conversion.Scope) error {
 	out.CoreDNS = (*CoreDNS)(unsafe.Pointer(in.CoreDNS))
+	out.NodeLocalDNS = (*NodeLocalDNS)(unsafe.Pointer(in.NodeLocalDNS))
 	return nil
 }
 
@@ -5568,7 +6050,15 @@ func autoConvert_v1beta1_Worker_To_core_Worker(in *Worker, out *core.Worker, s c
 	out.Annotations = *(*map[string]string)(unsafe.Pointer(&in.Annotations))
 	out.CABundle = (*string)(unsafe.Pointer(in.CABundle))
 	out.CRI = (*core.CRI)(unsafe.Pointer(in.CRI))
-	out.Kubernetes = (*core.WorkerKubernetes)(unsafe.Pointer(in.Kubernetes))
+	if in.Kubernetes != nil {
+		in, out := &in.Kubernetes, &out.Kubernetes
+		*out = new(core.WorkerKubernetes)
+		if err := Convert_v1beta1_WorkerKubernetes_To_core_WorkerKubernetes(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Kubernetes = nil
+	}
 	out.Labels = *(*map[string]string)(unsafe.Pointer(&in.Labels))
 	out.Name = in.Name
 	if err := Convert_v1beta1_Machine_To_core_Machine(&in.Machine, &out.Machine, s); err != nil {
@@ -5598,7 +6088,15 @@ func autoConvert_core_Worker_To_v1beta1_Worker(in *core.Worker, out *Worker, s c
 	out.Annotations = *(*map[string]string)(unsafe.Pointer(&in.Annotations))
 	out.CABundle = (*string)(unsafe.Pointer(in.CABundle))
 	out.CRI = (*CRI)(unsafe.Pointer(in.CRI))
-	out.Kubernetes = (*WorkerKubernetes)(unsafe.Pointer(in.Kubernetes))
+	if in.Kubernetes != nil {
+		in, out := &in.Kubernetes, &out.Kubernetes
+		*out = new(WorkerKubernetes)
+		if err := Convert_core_WorkerKubernetes_To_v1beta1_WorkerKubernetes(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Kubernetes = nil
+	}
 	out.Labels = *(*map[string]string)(unsafe.Pointer(&in.Labels))
 	out.Name = in.Name
 	if err := Convert_core_Machine_To_v1beta1_Machine(&in.Machine, &out.Machine, s); err != nil {
@@ -5625,7 +6123,15 @@ func Convert_core_Worker_To_v1beta1_Worker(in *core.Worker, out *Worker, s conve
 }
 
 func autoConvert_v1beta1_WorkerKubernetes_To_core_WorkerKubernetes(in *WorkerKubernetes, out *core.WorkerKubernetes, s conversion.Scope) error {
-	out.Kubelet = (*core.KubeletConfig)(unsafe.Pointer(in.Kubelet))
+	if in.Kubelet != nil {
+		in, out := &in.Kubelet, &out.Kubelet
+		*out = new(core.KubeletConfig)
+		if err := Convert_v1beta1_KubeletConfig_To_core_KubeletConfig(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Kubelet = nil
+	}
 	out.Version = (*string)(unsafe.Pointer(in.Version))
 	return nil
 }
@@ -5636,7 +6142,15 @@ func Convert_v1beta1_WorkerKubernetes_To_core_WorkerKubernetes(in *WorkerKuberne
 }
 
 func autoConvert_core_WorkerKubernetes_To_v1beta1_WorkerKubernetes(in *core.WorkerKubernetes, out *WorkerKubernetes, s conversion.Scope) error {
-	out.Kubelet = (*KubeletConfig)(unsafe.Pointer(in.Kubelet))
+	if in.Kubelet != nil {
+		in, out := &in.Kubelet, &out.Kubelet
+		*out = new(KubeletConfig)
+		if err := Convert_core_KubeletConfig_To_v1beta1_KubeletConfig(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Kubelet = nil
+	}
 	out.Version = (*string)(unsafe.Pointer(in.Version))
 	return nil
 }
@@ -5664,4 +6178,24 @@ func autoConvert_core_WorkerSystemComponents_To_v1beta1_WorkerSystemComponents(i
 // Convert_core_WorkerSystemComponents_To_v1beta1_WorkerSystemComponents is an autogenerated conversion function.
 func Convert_core_WorkerSystemComponents_To_v1beta1_WorkerSystemComponents(in *core.WorkerSystemComponents, out *WorkerSystemComponents, s conversion.Scope) error {
 	return autoConvert_core_WorkerSystemComponents_To_v1beta1_WorkerSystemComponents(in, out, s)
+}
+
+func autoConvert_v1beta1_WorkersSettings_To_core_WorkersSettings(in *WorkersSettings, out *core.WorkersSettings, s conversion.Scope) error {
+	out.SSHAccess = (*core.SSHAccess)(unsafe.Pointer(in.SSHAccess))
+	return nil
+}
+
+// Convert_v1beta1_WorkersSettings_To_core_WorkersSettings is an autogenerated conversion function.
+func Convert_v1beta1_WorkersSettings_To_core_WorkersSettings(in *WorkersSettings, out *core.WorkersSettings, s conversion.Scope) error {
+	return autoConvert_v1beta1_WorkersSettings_To_core_WorkersSettings(in, out, s)
+}
+
+func autoConvert_core_WorkersSettings_To_v1beta1_WorkersSettings(in *core.WorkersSettings, out *WorkersSettings, s conversion.Scope) error {
+	out.SSHAccess = (*SSHAccess)(unsafe.Pointer(in.SSHAccess))
+	return nil
+}
+
+// Convert_core_WorkersSettings_To_v1beta1_WorkersSettings is an autogenerated conversion function.
+func Convert_core_WorkersSettings_To_v1beta1_WorkersSettings(in *core.WorkersSettings, out *WorkersSettings, s conversion.Scope) error {
+	return autoConvert_core_WorkersSettings_To_v1beta1_WorkersSettings(in, out, s)
 }

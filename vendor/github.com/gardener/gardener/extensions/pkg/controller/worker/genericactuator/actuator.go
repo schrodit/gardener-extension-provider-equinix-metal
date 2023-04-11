@@ -36,22 +36,20 @@ import (
 
 	extensionscontroller "github.com/gardener/gardener/extensions/pkg/controller"
 	"github.com/gardener/gardener/extensions/pkg/controller/worker"
-	workerhelper "github.com/gardener/gardener/extensions/pkg/controller/worker/helper"
+	extensionsworkerhelper "github.com/gardener/gardener/extensions/pkg/controller/worker/helper"
 	v1beta1constants "github.com/gardener/gardener/pkg/apis/core/v1beta1/constants"
 	extensionsv1alpha1 "github.com/gardener/gardener/pkg/apis/extensions/v1alpha1"
-	gardenerkubernetes "github.com/gardener/gardener/pkg/client/kubernetes"
+	kubernetesclient "github.com/gardener/gardener/pkg/client/kubernetes"
 	"github.com/gardener/gardener/pkg/controllerutils"
 	"github.com/gardener/gardener/pkg/utils/chart"
 	"github.com/gardener/gardener/pkg/utils/imagevector"
-	kutil "github.com/gardener/gardener/pkg/utils/kubernetes"
+	kubernetesutils "github.com/gardener/gardener/pkg/utils/kubernetes"
 )
 
 // GardenPurposeMachineClass is a constant for the 'machineclass' value in a label.
 const GardenPurposeMachineClass = "machineclass"
 
 type genericActuator struct {
-	logger logr.Logger
-
 	delegateFactory DelegateFactory
 	mcmName         string
 	mcmSeedChart    chart.Interface
@@ -62,8 +60,8 @@ type genericActuator struct {
 	clientset            kubernetes.Interface
 	reader               client.Reader
 	scheme               *runtime.Scheme
-	gardenerClientset    gardenerkubernetes.Interface
-	chartApplier         gardenerkubernetes.ChartApplier
+	gardenerClientset    kubernetesclient.Interface
+	chartApplier         kubernetesclient.ChartApplier
 	chartRendererFactory extensionscontroller.ChartRendererFactory
 }
 
@@ -71,7 +69,6 @@ type genericActuator struct {
 // Worker resources of Gardener's `extensions.gardener.cloud` API group.
 // It provides a default implementation that allows easier integration of providers.
 func NewActuator(
-	logger logr.Logger,
 	delegateFactory DelegateFactory,
 	mcmName string,
 	mcmSeedChart,
@@ -80,7 +77,6 @@ func NewActuator(
 	chartRendererFactory extensionscontroller.ChartRendererFactory,
 ) worker.Actuator {
 	return &genericActuator{
-		logger:               logger.WithName("worker-actuator"),
 		delegateFactory:      delegateFactory,
 		mcmName:              mcmName,
 		mcmSeedChart:         mcmSeedChart,
@@ -117,7 +113,7 @@ func (a *genericActuator) InjectConfig(config *rest.Config) error {
 		return fmt.Errorf("could not create Kubernetes client: %w", err)
 	}
 
-	a.gardenerClientset, err = gardenerkubernetes.NewWithConfig(gardenerkubernetes.WithRESTConfig(config))
+	a.gardenerClientset, err = kubernetesclient.NewWithConfig(kubernetesclient.WithRESTConfig(config))
 	if err != nil {
 		return fmt.Errorf("could not create Gardener client: %w", err)
 	}
@@ -139,12 +135,12 @@ func (a *genericActuator) cleanupMachineDeployments(ctx context.Context, logger 
 	return nil
 }
 
-func (a *genericActuator) listMachineClassNames(ctx context.Context, namespace string, machineClassList client.ObjectList) (sets.String, error) {
+func (a *genericActuator) listMachineClassNames(ctx context.Context, namespace string, machineClassList client.ObjectList) (sets.Set[string], error) {
 	if err := a.client.List(ctx, machineClassList, client.InNamespace(namespace)); err != nil {
 		return nil, err
 	}
 
-	classNames := sets.NewString()
+	classNames := sets.New[string]()
 
 	if err := meta.EachListItem(machineClassList, func(machineClass runtime.Object) error {
 		accessor, err := meta.Accessor(machineClass)
@@ -237,8 +233,8 @@ func (a *genericActuator) updateCloudCredentialsInAllMachineClassSecrets(ctx con
 
 // shallowDeleteMachineClassSecrets deletes all unused machine class secrets (i.e., those which are not part
 // of the provided list <usedSecrets>) without waiting for MCM to do this.
-func (a *genericActuator) shallowDeleteMachineClassSecrets(ctx context.Context, logger logr.Logger, namespace string, wantedMachineDeployments worker.MachineDeployments) error {
-	logger.Info("Shallow deleting machine class secrets")
+func (a *genericActuator) shallowDeleteMachineClassSecrets(ctx context.Context, log logr.Logger, namespace string, wantedMachineDeployments worker.MachineDeployments) error {
+	log.Info("Shallow deleting machine class secrets")
 	secretList, err := a.listMachineClassSecrets(ctx, namespace)
 	if err != nil {
 		return err
@@ -246,8 +242,9 @@ func (a *genericActuator) shallowDeleteMachineClassSecrets(ctx context.Context, 
 	// Delete the finalizers to all secrets which were used for machine classes that do not exist anymore.
 	for _, secret := range secretList.Items {
 		if !wantedMachineDeployments.HasSecret(secret.Name) {
-			if err := controllerutils.RemoveAllFinalizers(ctx, a.client, a.client, &secret); err != nil {
-				return fmt.Errorf("error removing finalizer from MachineClassSecret: %s/%s: %w", secret.Namespace, secret.Name, err)
+			log.Info("Removing all finalizers from machine class secret", "secret", client.ObjectKeyFromObject(&secret))
+			if err := controllerutils.RemoveAllFinalizers(ctx, a.client, &secret); err != nil {
+				return fmt.Errorf("error removing all finalizers from machine class secret: %s/%s: %w", secret.Namespace, secret.Name, err)
 			}
 			if err := a.client.Delete(ctx, &secret); err != nil {
 				return err
@@ -259,15 +256,15 @@ func (a *genericActuator) shallowDeleteMachineClassSecrets(ctx context.Context, 
 }
 
 // removeFinalizerFromWorkerSecretRef removes the MCM finalizers from the secret that is referenced by the worker
-func (a *genericActuator) removeFinalizerFromWorkerSecretRef(ctx context.Context, logger logr.Logger, worker *extensionsv1alpha1.Worker) error {
-	logger.Info("Removing MCM finalizers from worker`s secret")
-	secret, err := kutil.GetSecretByReference(ctx, a.client, &worker.Spec.SecretRef)
+func (a *genericActuator) removeFinalizerFromWorkerSecretRef(ctx context.Context, log logr.Logger, worker *extensionsv1alpha1.Worker) error {
+	secret, err := kubernetesutils.GetSecretByReference(ctx, a.client, &worker.Spec.SecretRef)
 	if err != nil {
 		if apierrors.IsNotFound(err) {
 			return nil
 		}
 		return err
 	}
+
 	finalizersToRemove := []string{}
 	if controllerutil.ContainsFinalizer(secret, mcmFinalizer) {
 		finalizersToRemove = append(finalizersToRemove, mcmFinalizer)
@@ -278,7 +275,15 @@ func (a *genericActuator) removeFinalizerFromWorkerSecretRef(ctx context.Context
 	if len(finalizersToRemove) == 0 {
 		return nil
 	}
-	return controllerutils.PatchRemoveFinalizers(ctx, a.client, secret, finalizersToRemove...)
+
+	if len(finalizersToRemove) > 0 {
+		log.Info("Removing finalizers from secret", "secret", client.ObjectKeyFromObject(secret))
+		if err := controllerutils.RemoveFinalizers(ctx, a.client, secret, finalizersToRemove...); err != nil {
+			return fmt.Errorf("failed to remove finalizer from secret: %w", err)
+		}
+	}
+
+	return nil
 }
 
 // cleanupMachineSets deletes MachineSets having number of desired and actual replicas equaling 0
@@ -300,12 +305,14 @@ func (a *genericActuator) cleanupMachineSets(ctx context.Context, logger logr.Lo
 	return nil
 }
 
-func (a *genericActuator) shallowDeleteAllObjects(ctx context.Context, logger logr.Logger, namespace string, objectList client.ObjectList) error {
+func (a *genericActuator) shallowDeleteAllObjects(ctx context.Context, log logr.Logger, namespace string, objectList client.ObjectList) error {
 	var objectKind interface{} = strings.TrimSuffix(fmt.Sprintf("%T", objectList), "List")
 	if gvk, err := apiutil.GVKForObject(objectList, a.scheme); err == nil {
 		objectKind = gvk
 	}
-	logger.Info("Shallow deleting all objects of kind", "kind", objectKind)
+
+	log = log.WithValues("kind", objectKind)
+	log.Info("Shallow deleting all objects of kind")
 
 	if err := a.client.List(ctx, objectList, client.InNamespace(namespace)); err != nil {
 		return err
@@ -313,8 +320,12 @@ func (a *genericActuator) shallowDeleteAllObjects(ctx context.Context, logger lo
 
 	return meta.EachListItem(objectList, func(obj runtime.Object) error {
 		object := obj.(client.Object)
-		if err := controllerutils.RemoveAllFinalizers(ctx, a.client, a.client, object); err != nil {
+		if err := controllerutils.RemoveAllFinalizers(ctx, a.client, object); err != nil {
 			return err
+		}
+		log.Info("Removing all finalizers from object", "object", client.ObjectKeyFromObject(object))
+		if err := controllerutils.RemoveAllFinalizers(ctx, a.client, object); err != nil {
+			return fmt.Errorf("error removing all finalizers from object: %s/%s: %w", object.GetNamespace(), object.GetName(), err)
 		}
 		if err := a.client.Delete(ctx, object); client.IgnoreNotFound(err) != nil {
 			return err
@@ -353,11 +364,11 @@ const (
 
 // isMachineControllerStuck determines if the machine controller pod is stuck.
 // A pod is assumed to be stuck if
-//  - a machine deployment exists that does not have a machine set with the correct machine class
-//  - the machine set does not have a status that indicates (attempted) machine creation
+//   - a machine deployment exists that does not have a machine set with the correct machine class
+//   - the machine set does not have a status that indicates (attempted) machine creation
 func isMachineControllerStuck(machineSets []machinev1alpha1.MachineSet, machineDeployments []machinev1alpha1.MachineDeployment) (bool, *string) {
 	// map the owner reference to the existing machine sets
-	ownerReferenceToMachineSet := workerhelper.BuildOwnerToMachineSetsMap(machineSets)
+	ownerReferenceToMachineSet := extensionsworkerhelper.BuildOwnerToMachineSetsMap(machineSets)
 
 	for _, machineDeployment := range machineDeployments {
 		if !controllerutil.ContainsFinalizer(&machineDeployment, mcmFinalizer) {
@@ -369,7 +380,7 @@ func isMachineControllerStuck(machineSets []machinev1alpha1.MachineSet, machineD
 			continue
 		}
 
-		machineSet := workerhelper.GetMachineSetWithMachineClass(machineDeployment.Name, machineDeployment.Spec.Template.Spec.Class.Name, ownerReferenceToMachineSet)
+		machineSet := extensionsworkerhelper.GetMachineSetWithMachineClass(machineDeployment.Name, machineDeployment.Spec.Template.Spec.Class.Name, ownerReferenceToMachineSet)
 		if machineSet == nil {
 			msg := fmt.Sprintf("missing machine set for machine deployment (%s/%s)", machineDeployment.Namespace, machineDeployment.Name)
 			return true, &msg

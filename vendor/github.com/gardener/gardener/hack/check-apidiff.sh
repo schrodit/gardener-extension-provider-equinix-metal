@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Copyright (c) 2022 SAP SE or an SAP affiliate company. All rights reserved. This file is licensed under the Apache Software License, v. 2 except as noted otherwise in the LICENSE file
 #
@@ -57,7 +57,7 @@ exported_pkg=(
 
 # check the changes only for the package that is in the exported_pkg list
 while IFS= read -r line; do
-    if [[ $line =~ "gardener/gardener" ]]; then
+    if [[ $line =~ ^"github.com/gardener/gardener" ]]; then
         temp=0
         for x in ${exported_pkg[*]}; do
             if [[ $line =~ $x ]]; then
@@ -74,7 +74,7 @@ while IFS= read -r line; do
 done < "${tmpDir}/output.txt"
 
 if [[ $retval -eq 1 ]]; then
-    echo >&2 "FAIL: contains incompatible changes:"
+    echo >&2 "FAIL: contains compatible/incompatible changes:"
     cat ${tmpDir}/result.txt
 fi
 

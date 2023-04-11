@@ -17,23 +17,20 @@ package controlplane
 import (
 	"sync/atomic"
 
-	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/equinixmetal"
-	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/imagevector"
-
 	extensionscontroller "github.com/gardener/gardener/extensions/pkg/controller"
 	"github.com/gardener/gardener/extensions/pkg/controller/controlplane"
 	"github.com/gardener/gardener/extensions/pkg/controller/controlplane/genericactuator"
 	"github.com/gardener/gardener/extensions/pkg/util"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
-	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
+
+	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/equinixmetal"
+	"github.com/gardener/gardener-extension-provider-equinix-metal/pkg/imagevector"
 )
 
 var (
 	// DefaultAddOptions are the default AddOptions for AddToManager.
 	DefaultAddOptions = AddOptions{}
-
-	logger = log.Log.WithName("equinix-metal-controlplane-controller")
 )
 
 // AddOptions are options to apply when adding the Equinix Metal controlplane controller to the manager.
@@ -44,6 +41,8 @@ type AddOptions struct {
 	IgnoreOperationAnnotation bool
 	// ShootWebhookConfig specifies the desired Shoot MutatingWebhooksConfiguration.
 	ShootWebhookConfig *atomic.Value
+	// WebhookServerNamespace is the namespace in which the webhook server runs.
+	WebhookServerNamespace string
 }
 
 // AddToManagerWithOptions adds a controller with the given Options to the given manager.
@@ -53,8 +52,8 @@ func AddToManagerWithOptions(mgr manager.Manager, opts AddOptions) error {
 		Actuator: genericactuator.NewActuator(equinixmetal.Name,
 			nil, shootAccessSecretsFunc, nil, nil,
 			nil, controlPlaneChart, controlPlaneShootChart, nil, storageClassChart, nil,
-			NewValuesProvider(logger), extensionscontroller.ChartRendererFactoryFunc(util.NewChartRendererForShoot),
-			imagevector.ImageVector(), "", opts.ShootWebhookConfig, mgr.GetWebhookServer().Port, logger),
+			NewValuesProvider(), extensionscontroller.ChartRendererFactoryFunc(util.NewChartRendererForShoot),
+			imagevector.ImageVector(), "", opts.ShootWebhookConfig, opts.WebhookServerNamespace, mgr.GetWebhookServer().Port),
 		ControllerOptions: opts.Controller,
 		Predicates:        controlplane.DefaultPredicates(opts.IgnoreOperationAnnotation),
 		Type:              equinixmetal.Type,

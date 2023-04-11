@@ -20,8 +20,10 @@ import (
 	"strings"
 	"time"
 
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
 // ValueExists returns true or false, depending on whether the given string <value>
@@ -134,9 +136,21 @@ func QuantityPtr(q resource.Quantity) *resource.Quantity {
 	return &q
 }
 
-// DurationPtr returns a time.Duration pointer to its argument.
-func DurationPtr(d time.Duration) *time.Duration {
-	return &d
+// ProtocolPtr returns a corev1.Protocol pointer to its argument.
+func ProtocolPtr(protocol corev1.Protocol) *corev1.Protocol {
+	return &protocol
+}
+
+// IntStrPtrFromInt returns an intstr.IntOrString pointer to its argument.
+func IntStrPtrFromInt(port int) *intstr.IntOrString {
+	v := intstr.FromInt(port)
+	return &v
+}
+
+// IntStrPtrFromString returns an intstr.IntOrString pointer to its argument.
+func IntStrPtrFromString(port string) *intstr.IntOrString {
+	v := intstr.FromString(port)
+	return &v
 }
 
 // Indent indents the given string with the given number of spaces.
